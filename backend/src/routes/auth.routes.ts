@@ -21,7 +21,7 @@ router.post(
             .isLength({ min: 6 })
             .withMessage('Password must be at least 6 characters long'),
     ]),
-    authController.register.bind(authController)
+    authController.register
 );
 
 /**

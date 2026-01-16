@@ -8,7 +8,7 @@ export class ProductController {
      * GET /api/products
      * Get all products
      */
-    async getAll(req: Request, res: Response, next: NextFunction) {
+    getAll = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const filters = {
                 page: req.query.page ? parseInt(req.query.page as string) : undefined,
@@ -35,7 +35,7 @@ export class ProductController {
      * GET /api/products/:id
      * Get product by ID
      */
-    async getById(req: Request, res: Response, next: NextFunction) {
+    getById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const product = await productService.getProductById(parseInt(req.params.id));
 
@@ -53,7 +53,7 @@ export class ProductController {
      * POST /api/products
      * Create new product
      */
-    async create(req: Request, res: Response, next: NextFunction) {
+    create = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const product = await productService.createProduct(req.body);
 
@@ -71,7 +71,7 @@ export class ProductController {
      * PUT /api/products/:id
      * Update product
      */
-    async update(req: Request, res: Response, next: NextFunction) {
+    update = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const product = await productService.updateProduct(parseInt(req.params.id), req.body);
 
