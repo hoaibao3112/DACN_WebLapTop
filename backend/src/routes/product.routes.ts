@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { ProductController } from '../controllers/product.controller';
+import productController from '../controllers/product.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requirePermission } from '../middleware/rbac.middleware';
 
 const router = Router();
-const productController = new ProductController();
 
 /**
  * @route   GET /api/products
