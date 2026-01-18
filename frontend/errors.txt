@@ -1,0 +1,27 @@
+﻿src/app/cart/page.tsx(71,31): error TS2339: Property 'id_ctgiohang' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(76,52): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(77,33): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(87,49): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(90,31): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(94,29): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(97,44): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(104,56): error TS2339: Property 'id_ctgiohang' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(114,66): error TS2339: Property 'id_ctgiohang' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(114,85): error TS2551: Property 'soluong' does not exist on type 'CartItem'. Did you mean 'so_luong'?
+src/app/cart/page.tsx(119,76): error TS2551: Property 'soluong' does not exist on type 'CartItem'. Did you mean 'so_luong'?
+src/app/cart/page.tsx(121,66): error TS2339: Property 'id_ctgiohang' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(121,85): error TS2551: Property 'soluong' does not exist on type 'CartItem'. Did you mean 'so_luong'?
+src/app/cart/page.tsx(129,93): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/cart/page.tsx(129,130): error TS2551: Property 'soluong' does not exist on type 'CartItem'. Did you mean 'so_luong'?
+src/app/checkout/page.tsx(79,35): error TS2339: Property 'thongsokythuat_id' does not exist on type 'CartItem'.
+src/app/checkout/page.tsx(80,25): error TS2551: Property 'soluong' does not exist on type 'CartItem'. Did you mean 'so_luong'?
+src/app/checkout/page.tsx(81,24): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/checkout/page.tsx(304,36): error TS2339: Property 'id_ctgiohang' does not exist on type 'CartItem'.
+src/app/checkout/page.tsx(307,56): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/checkout/page.tsx(308,37): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/checkout/page.tsx(313,33): error TS2551: Property 'soluong' does not exist on type 'CartItem'. Did you mean 'so_luong'?
+src/app/checkout/page.tsx(318,33): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/app/checkout/page.tsx(321,48): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/contexts/CartContext.tsx(127,57): error TS2339: Property 'thongsokythuat' does not exist on type 'CartItem'.
+src/contexts/CartContext.tsx(127,94): error TS2551: Property 'soluong' does not exist on type 'CartItem'. Did you mean 'so_luong'?
+src/contexts/CartContext.tsx(135,55): error TS2551: Property 'soluong' does not exist on type 'CartItem'. Did you mean 'so_luong'?

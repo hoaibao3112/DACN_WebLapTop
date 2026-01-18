@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
 import { formatCurrency, getProductImageUrl } from '@/lib/auth';
+import { CartItem } from '@/lib/types';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -82,8 +83,8 @@ export default function CartPage() {
                   {/* Product Info */}
                   <div className="flex-1">
                     <h3 className="font-semibold mb-1">
-                      <a 
-                        href={`/products/${item.thongsokythuat?.id_sanpham}`}
+                      <a
+                        href={`/products/${item.thongsokythuat?.sanpham?.id_sanpham}`}
                         className="hover:text-blue-600"
                       >
                         {item.thongsokythuat?.sanpham?.ten_sanpham}
@@ -137,7 +138,7 @@ export default function CartPage() {
           <div className="lg:col-span-1">
             <Card className="sticky top-24">
               <h2 className="text-xl font-bold mb-4">Tổng đơn hàng</h2>
-              
+
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-gray-600">
                   <span>Tạm tính:</span>

@@ -23,11 +23,11 @@ export interface Product {
   anh_daidien?: string;
   ngay_capnhat?: string;
   trang_thai?: 'available' | 'out_of_stock' | 'discontinued';
-  
+
   // Relations
   danhmuc?: Category;
   thongsokythuats?: TechnicalSpec[];
-  
+
   // Legacy fields for compatibility
   ten_san_pham?: string;
   mo_ta?: string;
@@ -70,7 +70,7 @@ export interface TechnicalSpec {
   hedieuhanh?: string;
   gia_ban: number;
   ton_kho?: number;
-  
+
   // Legacy fields
   ma_thong_so?: number;
   ma_san_pham?: number;
@@ -81,13 +81,33 @@ export interface TechnicalSpec {
 }
 
 export interface CartItem {
-  ma_chi_tiet: number;
-  ma_gio_hang: number;
-  ma_san_pham: number;
-  so_luong: number;
-  don_gia: number;
-  created_at: string;
-  updated_at: string;
+  id_ctgiohang: number; // Backend uses this
+  ma_giohang: number;
+  thongsokythuat_id: number;
+  soluong: number;
+  created_at?: string;
+  updated_at?: string;
+  thongsokythuat?: {
+    id_thongsokythuat: number;
+    gia_ban: number;
+    ton_kho: number;
+    cpu?: string;
+    ram?: string;
+    dungluong?: string;
+    sanpham?: {
+      id_sanpham: number;
+      ten_sanpham: string;
+      anh_daidien?: string;
+      thuonghieu?: string;
+    };
+  };
+
+  // Legacy fields for compatibility
+  ma_chi_tiet?: number;
+  ma_gio_hang?: number;
+  ma_san_pham?: number;
+  so_luong?: number;
+  don_gia?: number;
   san_pham?: Product;
 }
 
