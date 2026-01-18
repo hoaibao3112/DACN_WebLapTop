@@ -4,6 +4,121 @@ import { Op } from 'sequelize';
 
 export class ProductService {
     /**
+     * Serialize product data for frontend consumption
+     */
+    private serializeProduct(product: any) {
+        const plainProduct = product.toJSON ? product.toJSON() : product;
+
+        // Get variants (thongsokythuats)
+        const variants = plainProduct.thongsokythuats || [];
+
+        // Calculate min price from all variants
+        let minPrice = 0;
+        let totalStock = 0;
+
+        if (variants.length > 0) {
+            const prices = variants.map((v: any) => parseFloat(v.gia_ban || 0));
+            minPrice = Math.min(...prices);
+            totalStock = variants.reduce((sum: number, v: any) => sum + (v.ton_kho || 0), 0);
+        }
+
+        // Convert first variant to technical specs for display
+        const technicalSpecs = this.variantToTechnicalSpecs(variants[0]);
+
+        return {
+            ma_san_pham: plainProduct.id_sanpham,
+            ten_san_pham: plainProduct.ten_sanpham,
+            thuong_hieu: plainProduct.thuonghieu,
+            mo_ta: plainProduct.mota,
+            hinh_anh: plainProduct.anh_daidien, // Map anh_daidien to hinh_anh
+            gia_ban: minPrice,
+            so_luong_ton: totalStock,
+            danh_muc: plainProduct.danhmuc,
+            thong_so_ky_thuat: technicalSpecs,
+            thongsokythuats: variants, // Keep variants for cart/order
+            // Keep original fields for compatibility
+            id_sanpham: plainProduct.id_sanpham,
+            danhmuc_id: plainProduct.danhmuc_id,
+            ngay_capnhat: plainProduct.ngay_capnhat,
+        };
+    }
+
+    /**
+     * Convert variant to technical specs format for display
+     */
+    private variantToTechnicalSpecs(variant: any): any[] {
+        if (!variant) return [];
+
+        const specs = [];
+
+        if (variant.cpu) {
+            specs.push({
+                ma_thong_so: 'cpu',
+                ten_thong_so: 'CPU',
+                gia_tri: variant.cpu,
+            });
+        }
+
+        if (variant.ram) {
+            specs.push({
+                ma_thong_so: 'ram',
+                ten_thong_so: 'RAM',
+                gia_tri: variant.ram,
+            });
+        }
+
+        if (variant.dungluong) {
+            specs.push({
+                ma_thong_so: 'dungluong',
+                ten_thong_so: 'Dung lượng',
+                gia_tri: variant.dungluong,
+            });
+        }
+
+        if (variant.card_roi) {
+            specs.push({
+                ma_thong_so: 'card_roi',
+                ten_thong_so: 'Card đồ họa',
+                gia_tri: variant.card_roi,
+            });
+        }
+
+        if (variant.manhinh) {
+            specs.push({
+                ma_thong_so: 'manhinh',
+                ten_thong_so: 'Màn hình',
+                gia_tri: variant.manhinh,
+            });
+        }
+
+        if (variant.trongluong) {
+            specs.push({
+                ma_thong_so: 'trongluong',
+                ten_thong_so: 'Trọng lượng',
+                gia_tri: variant.trongluong,
+            });
+        }
+
+        if (variant.congketnoi) {
+            specs.push({
+                ma_thong_so: 'congketnoi',
+                ten_thong_so: 'Cổng kết nối',
+                gia_tri: variant.congketnoi,
+            });
+        }
+
+        if (variant.hedieuhanh) {
+            specs.push({
+                ma_thong_so: 'hedieuhanh',
+                ten_thong_so: 'Hệ điều hành',
+                gia_tri: variant.hedieuhanh,
+            });
+        }
+
+        return specs;
+    }
+
+    /**
      * Get all products with pagination and filters
      */
     async getAllProducts(filters: {
@@ -98,7 +213,7 @@ export class ProductService {
         });
 
         return {
-            products: rows,
+            products: rows.map(product => this.serializeProduct(product)),
             pagination: {
                 page,
                 limit,
@@ -129,7 +244,7 @@ export class ProductService {
             throw new AppError('Product not found', 404);
         }
 
-        return product;
+        return this.serializeProduct(product);
     }
 
     /**

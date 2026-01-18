@@ -1,4 +1,4 @@
-import { HoaDon, ChiTietHoaDon, GioHang, ChiTietGioHang, ThongSoKyThuat, DiaChi } from '../models';
+import { HoaDon, ChiTietHoaDon, GioHang, ChiTietGioHang, ThongSoKyThuat, DiaChi, SanPham } from '../models';
 import { CartService } from './cart.service';
 import { sequelize } from '../config/database';
 
@@ -223,17 +223,80 @@ export class OrderService {
      * Get user's orders
      */
     async getUserOrders(userId: number) {
-        return await HoaDon.findAll({
+        const orders = await HoaDon.findAll({
             where: { taikhoan_id: userId },
             include: [
                 {
                     model: ChiTietHoaDon,
                     as: 'items',
-                    include: [{ model: ThongSoKyThuat, as: 'thongsokythuat' }],
+                    include: [
+                        {
+                            model: ThongSoKyThuat,
+                            as: 'thongsokythuat',
+                            include: [
+                                {
+                                    model: SanPham,
+                                    as: 'sanpham',
+                                },
+                            ],
+                        },
+                    ],
                 },
             ],
             order: [['ngay_dat', 'DESC']],
         });
+
+        // Serialize for frontend
+        return orders.map(order => this.serializeOrder(order));
+    }
+
+    /**
+     * Serialize order for frontend
+     */
+    private serializeOrder(order: any) {
+        const plainOrder = order.toJSON ? order.toJSON() : order;
+
+        // Map status
+        const statusMap: Record<string, string> = {
+            'Chờ duyệt': 'pending',
+            'Đang giao': 'shipping',
+            'Hoàn thành': 'delivered',
+            'Hủy': 'cancelled',
+        };
+
+        // Map payment method
+        const paymentMap: Record<string, string> = {
+            'COD': 'cod',
+            'Chuyển khoản': 'banking',
+            'VNPay': 'banking',
+            'MoMo': 'e-wallet',
+            'ZaloPay': 'e-wallet',
+        };
+
+        return {
+            ma_hoa_don: plainOrder.id_hoadon,
+            ma_tai_khoan: plainOrder.taikhoan_id,
+            tong_tien: parseFloat(plainOrder.tong_tien),
+            trang_thai: statusMap[plainOrder.trangthai] || 'pending',
+            phuong_thuc_thanh_toan: paymentMap[plainOrder.hinhthuc_thanhtoan] || 'cod',
+            ngay_dat: plainOrder.ngay_dat,
+            chi_tiet_hoa_don: plainOrder.items?.map((item: any) => {
+                const product = item.thongsokythuat?.sanpham;
+                return {
+                    ma_chi_tiet: item.id_cthoadon,
+                    ma_hoa_don: item.hoadon_id,
+                    ma_san_pham: item.thongsokythuat_id,
+                    so_luong: item.soluong,
+                    don_gia: parseFloat(item.gia_luc_mua),
+                    san_pham: item.thongsokythuat ? {
+                        ma_san_pham: item.thongsokythuat.id_sanpham,
+                        ten_san_pham: product?.ten_sanpham || item.thongsokythuat.ten_hienthi,
+                        thuong_hieu: product?.thuonghieu || '',
+                        hinh_anh: product?.anh_daidien || null,
+                    } : null,
+                };
+            }) || [],
+        };
     }
 
     /**
@@ -249,7 +312,18 @@ export class OrderService {
                 {
                     model: ChiTietHoaDon,
                     as: 'items',
-                    include: [{ model: ThongSoKyThuat, as: 'thongsokythuat' }],
+                    include: [
+                        {
+                            model: ThongSoKyThuat,
+                            as: 'thongsokythuat',
+                            include: [
+                                {
+                                    model: SanPham,
+                                    as: 'sanpham',
+                                },
+                            ],
+                        },
+                    ],
                 },
             ],
         });
@@ -258,7 +332,7 @@ export class OrderService {
             throw new Error('Order not found');
         }
 
-        return order;
+        return this.serializeOrder(order);
     }
 
     /**
