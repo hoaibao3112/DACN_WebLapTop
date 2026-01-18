@@ -282,3 +282,4 @@ export class ProductService {
         await product.destroy();
     }
 }
+export default new ProductService()

@@ -192,3 +192,4 @@ export class AuthService {
         return user;
     }
 }
+export default new AuthService()

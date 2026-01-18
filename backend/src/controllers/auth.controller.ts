@@ -10,7 +10,7 @@ export class AuthController {
      * POST /api/auth/register
      * Register a new user
      */
-    async register(req: Request, res: Response, next: NextFunction): Promise<void> {
+    register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const result = await authService.register(req.body);
 
@@ -28,7 +28,7 @@ export class AuthController {
      * POST /api/auth/login
      * Login user
      */
-    async login(req: Request, res: Response, next: NextFunction): Promise<void> {
+    login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const result = await authService.login(req.body);
 
@@ -46,7 +46,7 @@ export class AuthController {
      * POST /api/auth/refresh
      * Refresh access token
      */
-    async refreshToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+    refreshToken = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
         try {
             const { refreshToken } = req.body;
 
@@ -74,7 +74,7 @@ export class AuthController {
      * GET /api/auth/profile
      * Get current user profile
      */
-    async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    getProfile = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
         try {
             if (!req.user) {
                 res.status(401).json({
@@ -203,3 +203,5 @@ export class AuthController {
         }
     }
 }
+
+export default new AuthController()
