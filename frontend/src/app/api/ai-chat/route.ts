@@ -95,9 +95,10 @@ LƯU Ý:
 
 Hãy bắt đầu tư vấn!`;
 
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest): Promise<NextResponse> => {
   try {
-    const { message, conversationHistory } = await request.json();
+    const body = await request.json() as { message: string; conversationHistory?: Message[] };
+    const { message, conversationHistory } = body;
 
     if (!message) {
       return NextResponse.json(
@@ -108,9 +109,9 @@ export async function POST(request: NextRequest) {
 
     // Build conversation context
     const context = conversationHistory
-      ?.filter((msg: Message) => msg.role !== 'assistant' || !msg.content.includes('Xin chào!'))
+      ?.filter((msg) => msg.role !== 'assistant' || !msg.content.includes('Xin chào!'))
       .slice(-4) // Last 2 exchanges
-      .map((msg: Message) => `${msg.role === 'user' ? 'Khách hàng' : 'Trợ lý'}: ${msg.content}`)
+      .map((msg) => `${msg.role === 'user' ? 'Khách hàng' : 'Trợ lý'}: ${msg.content}`)
       .join('\n\n') || '';
 
     const fullPrompt = `${SYSTEM_PROMPT}\n\n${context ? 'Lịch sử hội thoại:\n' + context + '\n\n' : ''}Khách hàng: ${message}\n\nTrợ lý:`;
@@ -157,4 +158,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+};

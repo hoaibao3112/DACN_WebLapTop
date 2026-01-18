@@ -17,14 +17,14 @@ const Header: React.FC = () => {
 
   const cartCount = getCartCount();
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent): void => {
     e.preventDefault();
     if (searchQuery.trim()) {
       window.location.href = `/products?search=${encodeURIComponent(searchQuery)}`;
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     logout();
     setShowUserMenu(false);
   };

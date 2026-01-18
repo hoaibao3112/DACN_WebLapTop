@@ -48,11 +48,11 @@ export default function AIAssistantPage() {
     // Load conversation history from localStorage
     const saved = localStorage.getItem('ai_chat_history');
     if (saved) {
-      const parsed = JSON.parse(saved);
-      setConversationHistory(parsed.map((conv: any) => ({
+      const parsed = JSON.parse(saved) as ConversationHistory[];
+      setConversationHistory(parsed.map((conv) => ({
         ...conv,
         createdAt: new Date(conv.createdAt),
-        messages: conv.messages.map((msg: any) => ({
+        messages: conv.messages.map((msg) => ({
           ...msg,
           timestamp: new Date(msg.timestamp),
         })),
@@ -60,7 +60,7 @@ export default function AIAssistantPage() {
     }
   }, []);
 
-  const saveConversation = (msgs: Message[]) => {
+  const saveConversation = (msgs: Message[]): void => {
     if (msgs.length <= 1) return; // Don't save if only welcome message
 
     const convId = currentConversationId || Date.now().toString();
@@ -80,7 +80,7 @@ export default function AIAssistantPage() {
     setCurrentConversationId(convId);
   };
 
-  const handleSend = async () => {
+  const handleSend = async (): Promise<void> => {
     if (!input.trim() || loading) return;
 
     const userMessage: Message = {
@@ -133,19 +133,19 @@ export default function AIAssistantPage() {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent): void => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
   };
 
-  const loadConversation = (conv: ConversationHistory) => {
+  const loadConversation = (conv: ConversationHistory): void => {
     setMessages(conv.messages);
     setCurrentConversationId(conv.id);
   };
 
-  const startNewChat = () => {
+  const startNewChat = (): void => {
     setMessages([
       {
         id: '1',
