@@ -3,6 +3,19 @@ import { AuthService } from '../services/auth.service';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.util';
 import { TaiKhoan, VaiTro, Quyen } from '../models';
 
+interface QuyenWithMaQuyen extends Quyen {
+    ma_quyen: string;
+}
+
+interface VaiTroWithQuyen extends VaiTro {
+    ten_vaitro: string;
+    quyens?: QuyenWithMaQuyen[];
+}
+
+interface TaiKhoanWithRoles extends TaiKhoan {
+    vaitros?: VaiTroWithQuyen[];
+}
+
 const authService = new AuthService();
 
 export class AuthController {
@@ -107,7 +120,7 @@ export class AuthController {
                 return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/login?error=oauth_failed`);
             }
 
-            const user = req.user as any;
+            const user = (req.user as unknown) as { id_taikhoan: number };
             
             // Load full user info with roles and permissions
             const fullUser = await TaiKhoan.findByPk(user.id_taikhoan, {
@@ -125,9 +138,10 @@ export class AuthController {
             }
 
             // Extract roles and permissions
-            const roles = (fullUser as any).vaitros?.map((vaitro: any) => vaitro.ten_vaitro) || ['customer'];
-            const permissions = (fullUser as any).vaitros?.flatMap((vaitro: any) =>
-                vaitro.quyens?.map((quyen: any) => quyen.ten_quyen) || []
+            const fullUserWithRoles = fullUser as TaiKhoanWithRoles;
+            const roles = fullUserWithRoles.vaitros?.map((vaitro) => vaitro.ten_vaitro) || ['customer'];
+            const permissions = fullUserWithRoles.vaitros?.flatMap((vaitro) =>
+                vaitro.quyens?.map((quyen) => quyen.ma_quyen) || []
             ) || [];
 
             const payload = {
@@ -160,7 +174,7 @@ export class AuthController {
                 return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/login?error=oauth_failed`);
             }
 
-            const user = req.user as any;
+            const user = (req.user as unknown) as { id_taikhoan: number };
             
             // Load full user info with roles and permissions
             const fullUser = await TaiKhoan.findByPk(user.id_taikhoan, {
@@ -178,9 +192,10 @@ export class AuthController {
             }
 
             // Extract roles and permissions
-            const roles = (fullUser as any).vaitros?.map((vaitro: any) => vaitro.ten_vaitro) || ['customer'];
-            const permissions = (fullUser as any).vaitros?.flatMap((vaitro: any) =>
-                vaitro.quyens?.map((quyen: any) => quyen.ten_quyen) || []
+            const fullUserWithRoles = fullUser as TaiKhoanWithRoles;
+            const roles = fullUserWithRoles.vaitros?.map((vaitro) => vaitro.ten_vaitro) || ['customer'];
+            const permissions = fullUserWithRoles.vaitros?.flatMap((vaitro) =>
+                vaitro.quyens?.map((quyen) => quyen.ma_quyen) || []
             ) || [];
 
             const payload = {

@@ -9,7 +9,7 @@ export class AddressController {
      * GET /api/addresses
      * Get user's addresses
      */
-    async getAddresses(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    getAddresses = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const addresses = await addressService.getUserAddresses(userId);
@@ -28,7 +28,7 @@ export class AddressController {
      * POST /api/addresses
      * Create new address
      */
-    async createAddress(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    createAddress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const addressData = req.body;
@@ -49,7 +49,7 @@ export class AddressController {
      * PUT /api/addresses/:id
      * Update address
      */
-    async updateAddress(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    updateAddress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const addressId = parseInt(req.params.id);
@@ -80,7 +80,7 @@ export class AddressController {
      * DELETE /api/addresses/:id
      * Delete address
      */
-    async deleteAddress(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    deleteAddress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const addressId = parseInt(req.params.id);
@@ -108,7 +108,7 @@ export class AddressController {
      * PUT /api/addresses/:id/default
      * Set address as default
      */
-    async setDefaultAddress(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    setDefaultAddress = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const addressId = parseInt(req.params.id);
@@ -132,3 +132,5 @@ export class AddressController {
         }
     }
 }
+
+export default new AddressController();

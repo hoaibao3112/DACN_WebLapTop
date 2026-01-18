@@ -2,6 +2,50 @@ import crypto from 'crypto';
 import querystring from 'querystring';
 import { env } from '../config/env';
 
+interface MoMoResponse {
+    resultCode: number;
+    payUrl?: string;
+    localMessage?: string;
+    message?: string;
+}
+
+interface ZaloPayResponse {
+    return_code: number;
+    order_url?: string;
+    return_message?: string;
+}
+
+interface MoMoIPNData {
+    partnerCode: string;
+    orderId: string;
+    requestId: string;
+    amount: number;
+    orderInfo: string;
+    orderType: string;
+    transId: string;
+    resultCode: number;
+    message: string;
+    payType: string;
+    responseTime: number;
+    extraData: string;
+    signature: string;
+}
+
+interface ZaloPayOrder {
+    app_id: number;
+    app_trans_id: string;
+    app_user: string;
+    app_time: number;
+    item: string;
+    embed_data: string;
+    amount: number;
+    description: string;
+    bank_code: string;
+    callback_url: string;
+    mac?: string;
+    [key: string]: string | number | undefined;
+}
+
 export class PaymentService {
     /**
      * Create VNPay payment URL
@@ -24,7 +68,7 @@ export class PaymentService {
         const expireDateObj = new Date(date.getTime() + 15 * 60 * 1000);
         const expireDate = expireDateObj.toISOString().replace(/[-:T.]/g, '').slice(0, 14);
 
-        let vnp_Params: any = {
+        let vnp_Params: Record<string, string | number> = {
             vnp_Version: '2.1.0',
             vnp_Command: 'pay',
             vnp_TmnCode: vnp_TmnCode,
@@ -88,22 +132,23 @@ export class PaymentService {
                 body: JSON.stringify(requestBody),
             });
 
-            const data = await response.json() as any;
+            const data = await response.json() as MoMoResponse;
 
             if (data.resultCode === 0) {
-                return data.payUrl;
+                return data.payUrl!;
             } else {
                 console.error('MoMo API Error:', data);
                 // Throw the specific message from MoMo for clarity (e.g., amount limit)
                 throw new Error(data.localMessage || data.message || `MoMo payment failed: ${data.resultCode}`);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('MoMo Connection Error:', error);
             // If it's already an Error with a specific message from MoMo, rethrow it
-            if (error.message && !error.message.includes('fetch')) {
+            if (error instanceof Error && error.message && !error.message.includes('fetch')) {
                 throw error;
             }
-            throw new Error(`Cannot connect to MoMo: ${error.message || 'Network error'}`);
+            const errorMessage = error instanceof Error ? error.message : 'Network error';
+            throw new Error(`Cannot connect to MoMo: ${errorMessage}`);
         }
     }
 
@@ -120,7 +165,7 @@ export class PaymentService {
         const embeddata = JSON.stringify({});
         const item = JSON.stringify([]);
 
-        const order: any = {
+        const order: ZaloPayOrder = {
             app_id: appid,
             app_trans_id: `${new Date().getFullYear()}${new Date().getMonth() + 1}${new Date().getDate()}_${orderCode}`,
             app_user: 'user123',
@@ -156,10 +201,10 @@ export class PaymentService {
                 body: querystring.stringify(order),
             });
 
-            const result = await response.json() as any;
+            const result = await response.json() as ZaloPayResponse;
 
             if (result.return_code === 1) {
-                return result.order_url;
+                return result.order_url!;
             } else {
                 throw new Error(result.return_message || 'ZaloPay payment creation failed');
             }
@@ -188,7 +233,7 @@ export class PaymentService {
     /**
      * Verify VNPay IPN
      */
-    verifyVNPayIPN(vnp_Params: any): boolean {
+    verifyVNPayIPN = (vnp_Params: Record<string, string | number>): boolean => {
         const secureHash = vnp_Params['vnp_SecureHash'];
         delete vnp_Params['vnp_SecureHash'];
         delete vnp_Params['vnp_SecureHashType'];
@@ -205,7 +250,7 @@ export class PaymentService {
     /**
      * Verify MoMo IPN
      */
-    verifyMoMoIPN(data: any): boolean {
+    verifyMoMoIPN = (data: MoMoIPNData): boolean => {
         const {
             partnerCode,
             orderId,
@@ -231,12 +276,12 @@ export class PaymentService {
         return signature === expectedSignature;
     }
 
-    private sortObject(obj: any): any {
-        const sorted: any = {};
+    private sortObject = (obj: Record<string, string | number>): Record<string, string | number> => {
+        const sorted: Record<string, string | number> = {};
         const keys = Object.keys(obj).sort();
         keys.forEach((key) => {
             sorted[key] = obj[key];
         });
         return sorted;
-    }
+    };
 }

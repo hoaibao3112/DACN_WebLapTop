@@ -9,13 +9,9 @@ export class PaymentController {
      * GET /api/payments/vnpay-return
      * VNPay return URL handler (user redirect)
      */
-    /**
-     * GET /api/payments/vnpay-return
-     * VNPay return URL handler (user redirect)
-     */
-    async vnpayReturn(req: Request, res: Response, next: NextFunction): Promise<void> {
+    vnpayReturn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const vnp_Params = req.query;
+            const vnp_Params = req.query as any as Record<string, string | number>;
 
             // Verify signature
             const isValid = paymentService.verifyVNPayIPN(vnp_Params);
@@ -49,9 +45,9 @@ export class PaymentController {
      * GET /api/payments/vnpay-ipn
      * VNPay IPN (Instant Payment Notification) handler
      */
-    async vnpayIPN(req: Request, res: Response, next: NextFunction): Promise<void> {
+    vnpayIPN = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const vnp_Params = req.query;
+            const vnp_Params = req.query as any as Record<string, string | number>;
 
             // Verify signature
             const isValid = paymentService.verifyVNPayIPN(vnp_Params);
@@ -89,7 +85,7 @@ export class PaymentController {
      * GET /api/payments/momo-return
      * MoMo return URL handler (user redirect)
      */
-    async momoReturn(req: Request, res: Response, next: NextFunction): Promise<void> {
+    momoReturn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { orderId, resultCode } = req.query;
             const orderCode = orderId as string;
@@ -115,7 +111,7 @@ export class PaymentController {
      * POST /api/payments/momo-ipn
      * MoMo IPN handler
      */
-    async momoIPN(req: Request, res: Response, next: NextFunction): Promise<void> {
+    momoIPN = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const momoData = req.body;
 
@@ -155,7 +151,7 @@ export class PaymentController {
      * GET /api/payments/zalopay-return
      * ZaloPay return URL handler (user redirect)
      */
-    async zalopayReturn(req: Request, res: Response, next: NextFunction): Promise<void> {
+    zalopayReturn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { apptransid, status } = req.query;
 
@@ -183,7 +179,7 @@ export class PaymentController {
      * POST /api/payments/zalopay-ipn
      * ZaloPay callback handler
      */
-    async zalopayIPN(req: Request, res: Response, next: NextFunction): Promise<void> {
+    zalopayIPN = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const zalopayData = req.body;
             const dataStr = zalopayData.data;
@@ -222,3 +218,5 @@ export class PaymentController {
         }
     }
 }
+
+export default new PaymentController();

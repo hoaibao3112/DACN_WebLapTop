@@ -66,8 +66,8 @@ export default function ProductDetailPage() {
       setAddingToCart(true);
       await addToCart(product.ma_san_pham, quantity);
       alert('Đã thêm vào giỏ hàng!');
-    } catch (error: any) {
-      alert(error.message || 'Không thể thêm vào giỏ hàng');
+    } catch (error: unknown) {
+      alert(error instanceof Error ? error.message : 'Không thể thêm vào giỏ hàng');
     } finally {
       setAddingToCart(false);
     }

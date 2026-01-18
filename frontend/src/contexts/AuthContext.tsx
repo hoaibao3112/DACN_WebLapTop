@@ -59,9 +59,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         throw new Error(response.message || 'Login failed');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login error:', error);
-      throw new Error(error.message || 'Đăng nhập thất bại');
+      const message = error instanceof Error ? error.message : 'Đăng nhập thất bại';
+      throw new Error(message);
     } finally {
       setLoading(false);
     }
@@ -79,9 +80,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         throw new Error(response.message || 'Registration failed');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error);
-      throw new Error(error.message || 'Đăng ký thất bại');
+      const message = error instanceof Error ? error.message : 'Đăng ký thất bại';
+      throw new Error(message);
     } finally {
       setLoading(false);
     }

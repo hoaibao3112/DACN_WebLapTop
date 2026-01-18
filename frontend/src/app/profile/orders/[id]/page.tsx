@@ -55,8 +55,8 @@ export default function OrderDetailPage() {
         alert('Đã hủy đơn hàng thành công');
         fetchOrder();
       }
-    } catch (error: any) {
-      alert(error.message || 'Không thể hủy đơn hàng');
+    } catch (error: unknown) {
+      alert(error instanceof Error ? error.message : 'Không thể hủy đơn hàng');
     }
   };
 

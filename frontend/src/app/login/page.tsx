@@ -38,8 +38,8 @@ export default function LoginPage() {
     try {
       await login(loginData);
       router.push('/');
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Đăng nhập thất bại');
     } finally {
       setLoading(false);
     }
@@ -53,8 +53,8 @@ export default function LoginPage() {
     try {
       await register(registerData);
       router.push('/');
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Đăng ký thất bại');
     } finally {
       setLoading(false);
     }

@@ -1,13 +1,31 @@
 import { SanPham, ThongSoKyThuat, DanhMuc } from '../models';
 import { AppError } from '../middleware/error.middleware';
-import { Op } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
+
+interface PlainProduct {
+    id_sanpham: number;
+    ten_sanpham: string;
+    thuonghieu?: string;
+    mota?: string;
+    anh_daidien?: string;
+    danhmuc_id: number;
+    ngay_capnhat?: Date;
+    thongsokythuats?: ThongSoKyThuat[];
+    danhmuc?: DanhMuc;
+}
+
+interface Variant {
+    gia_ban: number;
+    ton_kho: number;
+    [key: string]: unknown;
+}
 
 export class ProductService {
     /**
      * Serialize product data for frontend consumption
      */
-    private serializeProduct(product: any) {
-        const plainProduct = product.toJSON ? product.toJSON() : product;
+    private serializeProduct = (product: SanPham): Record<string, unknown> => {
+        const plainProduct = (product.toJSON ? product.toJSON() : product) as PlainProduct;
 
         // Get variants (thongsokythuats)
         const variants = plainProduct.thongsokythuats || [];
@@ -17,9 +35,9 @@ export class ProductService {
         let totalStock = 0;
 
         if (variants.length > 0) {
-            const prices = variants.map((v: any) => parseFloat(v.gia_ban || 0));
+            const prices = variants.map((v) => parseFloat(String(v.gia_ban || 0)));
             minPrice = Math.min(...prices);
-            totalStock = variants.reduce((sum: number, v: any) => sum + (v.ton_kho || 0), 0);
+            totalStock = variants.reduce((sum: number, v) => sum + (v.ton_kho || 0), 0);
         }
 
         // Convert first variant to technical specs for display
@@ -46,7 +64,7 @@ export class ProductService {
     /**
      * Convert variant to technical specs format for display
      */
-    private variantToTechnicalSpecs(variant: any): any[] {
+    private variantToTechnicalSpecs = (variant: ThongSoKyThuat | undefined): Array<{ ma_thong_so: string; ten_thong_so: string; gia_tri: string }> => {
         if (!variant) return [];
 
         const specs = [];
@@ -174,7 +192,7 @@ export class ProductService {
         }
 
         // Sorting
-        let order: any[] = [['ngay_capnhat', 'DESC']];
+        let order: Array<[string, string]> = [['ngay_capnhat', 'DESC']];
         if (filters.sortBy) {
             switch (filters.sortBy) {
                 case 'price_asc':
@@ -250,15 +268,15 @@ export class ProductService {
     /**
      * Create new product
      */
-    async createProduct(data: any) {
+    createProduct = async (data: any): Promise<SanPham> => {
         const product = await SanPham.create(data);
         return product;
-    }
+    };
 
     /**
      * Update product
      */
-    async updateProduct(id: number, data: any) {
+    updateProduct = async (id: number, data: Partial<SanPham>): Promise<SanPham> => {
         const product = await SanPham.findByPk(id);
 
         if (!product) {

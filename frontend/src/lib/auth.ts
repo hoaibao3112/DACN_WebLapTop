@@ -122,6 +122,7 @@ export const generateId = (): string => {
 };
 
 // Debounce function for search
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const debounce = <T extends (...args: any[]) => any>(
   func: T,
   delay: number

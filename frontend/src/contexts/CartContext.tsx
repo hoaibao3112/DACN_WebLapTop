@@ -56,9 +56,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (response.success && response.data) {
         setCart(response.data);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error adding to cart:', error);
-      throw new Error(error.message || 'Không thể thêm sản phẩm vào giỏ hàng');
+      const message = error instanceof Error ? error.message : 'Không thể thêm sản phẩm vào giỏ hàng';
+      throw new Error(message);
     } finally {
       setLoading(false);
     }
@@ -123,7 +124,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const getCartTotal = useCallback(() => {
     if (!cart || !cart.chi_tiet_gio_hang) return 0;
     return cart.chi_tiet_gio_hang.reduce(
-      (total: number, item: any) => total + ((item.thongsokythuat?.gia_ban || 0) * item.soluong),
+      (total: number, item: CartItem) => total + ((item.thongsokythuat?.gia_ban || 0) * item.soluong),
       0
     );
   }, [cart]);
@@ -131,7 +132,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const getCartCount = useCallback(() => {
     if (!cart || !cart.chi_tiet_gio_hang) return 0;
     return cart.chi_tiet_gio_hang.reduce(
-      (count: number, item: any) => count + item.soluong,
+      (count: number, item: CartItem) => count + item.soluong,
       0
     );
   }, [cart]);

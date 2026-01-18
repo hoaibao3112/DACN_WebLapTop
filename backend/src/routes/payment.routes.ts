@@ -1,34 +1,33 @@
 import { Router } from 'express';
-import { PaymentController } from '../controllers/payment.controller';
+import paymentController from '../controllers/payment.controller';
 
 const router = Router();
-const paymentController = new PaymentController();
 
 /**
  * VNPay Routes
  */
 // Return URL - User redirect after payment
-router.get('/vnpay-return', (req, res, next) => paymentController.vnpayReturn(req, res, next));
+router.get('/vnpay-return', paymentController.vnpayReturn);
 
 // IPN - Instant Payment Notification from VNPay
-router.get('/vnpay-ipn', (req, res, next) => paymentController.vnpayIPN(req, res, next));
+router.get('/vnpay-ipn', paymentController.vnpayIPN);
 
 /**
  * MoMo Routes
  */
 // Return URL - User redirect after payment
-router.get('/momo-return', (req, res, next) => paymentController.momoReturn(req, res, next));
+router.get('/momo-return', paymentController.momoReturn);
 
 // IPN - Instant Payment Notification from MoMo
-router.post('/momo-ipn', (req, res, next) => paymentController.momoIPN(req, res, next));
+router.post('/momo-ipn', paymentController.momoIPN);
 
 /**
  * ZaloPay Routes
  */
 // Return URL - User redirect after payment
-router.get('/zalopay-return', (req, res, next) => paymentController.zalopayReturn(req, res, next));
+router.get('/zalopay-return', paymentController.zalopayReturn);
 
 // Callback - Payment notification from ZaloPay
-router.post('/zalopay-ipn', (req, res, next) => paymentController.zalopayIPN(req, res, next));
+router.post('/zalopay-ipn', paymentController.zalopayIPN);
 
 export default router;

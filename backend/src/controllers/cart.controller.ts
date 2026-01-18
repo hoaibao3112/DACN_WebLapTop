@@ -9,7 +9,7 @@ export class CartController {
      * GET /api/cart
      * Get user's cart
      */
-    async getCart(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    getCart = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const cart = await cartService.getCart(userId);
@@ -28,7 +28,7 @@ export class CartController {
      * POST /api/cart/items
      * Add item to cart
      */
-    async addItem(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    addItem = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const { thongsokythuat_id, soluong } = req.body;
@@ -49,7 +49,7 @@ export class CartController {
      * PUT /api/cart/items/:id
      * Update cart item quantity
      */
-    async updateItem(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    updateItem = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const itemId = parseInt(req.params.id);
@@ -80,7 +80,7 @@ export class CartController {
      * DELETE /api/cart/items/:id
      * Remove item from cart
      */
-    async removeItem(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    removeItem = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const itemId = parseInt(req.params.id);
@@ -108,7 +108,7 @@ export class CartController {
      * DELETE /api/cart
      * Clear cart
      */
-    async clearCart(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    clearCart = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
 
@@ -123,3 +123,5 @@ export class CartController {
         }
     }
 }
+
+export default new CartController();

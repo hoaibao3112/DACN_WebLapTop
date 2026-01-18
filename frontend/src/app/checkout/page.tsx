@@ -74,7 +74,7 @@ export default function CheckoutPage() {
       const orderData = {
         ...shippingInfo,
         payment_method: paymentMethod,
-        items: cartItems.map((item: any) => ({
+        items: cartItems.map((item: CartItem) => ({
           thongsokythuat_id: item.thongsokythuat_id,
           soluong: item.soluong,
           dongia: item.thongsokythuat?.gia_ban || 0,
@@ -114,9 +114,10 @@ export default function CheckoutPage() {
       } else {
         throw new Error(data.message || 'Đặt hàng thất bại');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Checkout error:', error);
-      alert(error.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
+      const message = error instanceof Error ? error.message : 'Có lỗi xảy ra. Vui lòng thử lại.';
+      alert(message);
     } finally {
       setLoading(false);
     }
@@ -298,7 +299,7 @@ export default function CheckoutPage() {
 
                 {/* Products */}
                 <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
-                  {cartItems.map((item: any) => (
+                  {cartItems.map((item: CartItem) => (
                     <div key={item.id_ctgiohang} className="flex gap-3">
                       <div className="relative w-16 h-16 flex-shrink-0 bg-gray-100 rounded">
                         <Image

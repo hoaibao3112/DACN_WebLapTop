@@ -66,7 +66,7 @@ export default function CartPage() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
-            {cartItems.map((item: any) => (
+            {cartItems.map((item: CartItem) => (
               <Card key={item.id_ctgiohang}>
                 <div className="flex gap-4">
                   {/* Product Image */}

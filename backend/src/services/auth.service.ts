@@ -14,6 +14,19 @@ interface LoginData {
     matkhau: string;
 }
 
+interface QuyenWithMaQuyen extends Quyen {
+    ma_quyen: string;
+}
+
+interface VaiTroWithQuyen extends VaiTro {
+    ten_vaitro: string;
+    quyens?: QuyenWithMaQuyen[];
+}
+
+interface TaiKhoanWithRoles extends TaiKhoan {
+    vaitros?: VaiTroWithQuyen[];
+}
+
 export class AuthService {
     /**
      * Register a new user
@@ -145,9 +158,10 @@ export class AuthService {
         }
 
         // Extract roles and permissions
-        const vaitros = (user as any).vaitros || [];
-        const roles = vaitros.map((vt: any) => vt.ten_vaitro);
-        const permissions = [...new Set(vaitros.flatMap((vt: any) => (vt.quyens || []).map((q: any) => q.ma_quyen)) as string[])] as string[];
+        const userWithRoles = user as TaiKhoanWithRoles;
+        const vaitros = userWithRoles.vaitros || [];
+        const roles = vaitros.map((vt: VaiTroWithQuyen) => vt.ten_vaitro);
+        const permissions = [...new Set(vaitros.flatMap((vt: VaiTroWithQuyen) => (vt.quyens || []).map((q: QuyenWithMaQuyen) => q.ma_quyen)))] as string[];
 
         const payload = {
             id: user.id_taikhoan,

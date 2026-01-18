@@ -56,8 +56,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       setLoading(true);
       await addToCart(firstSpec.id_thongsokythuat, 1);
       alert('Đã thêm vào giỏ hàng!');
-    } catch (error: any) {
-      alert(error.message || 'Không thể thêm vào giỏ hàng');
+    } catch (error: unknown) {
+      alert(error instanceof Error ? error.message : 'Không thể thêm vào giỏ hàng');
     } finally {
       setLoading(false);
     }

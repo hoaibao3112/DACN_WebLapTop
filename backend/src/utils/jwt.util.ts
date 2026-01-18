@@ -1,4 +1,5 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
+import type { StringValue } from 'ms';
 import { env } from '../config/env';
 
 interface JwtPayload {
@@ -12,8 +13,8 @@ interface JwtPayload {
  * Generate access token
  */
 export const generateAccessToken = (payload: JwtPayload): string => {
-    const options: any = {
-        expiresIn: env.JWT_EXPIRES_IN,
+    const options: SignOptions = {
+        expiresIn: env.JWT_EXPIRES_IN as StringValue,
     };
     return jwt.sign(payload, env.JWT_SECRET, options) as string;
 };
@@ -22,8 +23,8 @@ export const generateAccessToken = (payload: JwtPayload): string => {
  * Generate refresh token
  */
 export const generateRefreshToken = (payload: JwtPayload): string => {
-    const options: any = {
-        expiresIn: env.JWT_REFRESH_EXPIRES_IN,
+    const options: SignOptions = {
+        expiresIn: env.JWT_REFRESH_EXPIRES_IN as StringValue,
     };
     return jwt.sign(payload, env.JWT_REFRESH_SECRET, options) as string;
 };

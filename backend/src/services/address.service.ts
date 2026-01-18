@@ -13,17 +13,17 @@ export class AddressService {
     /**
      * Create new address
      */
-    async createAddress(userId: number, addressData: any) {
+    createAddress = async (userId: number, addressData: any): Promise<DiaChi> => {
         return await DiaChi.create({
             ma_tk: userId,
             ...addressData,
         });
-    }
+    };
 
     /**
      * Update address
      */
-    async updateAddress(userId: number, addressId: number, addressData: any) {
+    updateAddress = async (userId: number, addressId: number, addressData: any): Promise<DiaChi> => {
         const address = await DiaChi.findOne({
             where: {
                 id_diachi: addressId,
@@ -37,7 +37,7 @@ export class AddressService {
 
         await address.update(addressData);
         return address;
-    }
+    };
 
     /**
      * Delete address

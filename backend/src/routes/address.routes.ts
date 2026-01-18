@@ -1,26 +1,25 @@
 import { Router } from 'express';
-import { AddressController } from '../controllers/address.controller';
+import addressController from '../controllers/address.controller';
 import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
-const addressController = new AddressController();
 
 // All address routes require authentication
 router.use(authenticate);
 
 // Get all addresses
-router.get('/', (req, res, next) => addressController.getAddresses(req as any, res, next));
+router.get('/', addressController.getAddresses);
 
 // Create new address
-router.post('/', (req, res, next) => addressController.createAddress(req as any, res, next));
+router.post('/', addressController.createAddress);
 
 // Update address
-router.put('/:id', (req, res, next) => addressController.updateAddress(req as any, res, next));
+router.put('/:id', addressController.updateAddress);
 
 // Delete address
-router.delete('/:id', (req, res, next) => addressController.deleteAddress(req as any, res, next));
+router.delete('/:id', addressController.deleteAddress);
 
 // Set default address
-router.put('/:id/default', (req, res, next) => addressController.setDefaultAddress(req as any, res, next));
+router.put('/:id/default', addressController.setDefaultAddress);
 
 export default router;

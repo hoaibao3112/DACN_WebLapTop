@@ -11,7 +11,7 @@ export class OrderController {
      * POST /api/orders
      * Create new order
      */
-    async createOrder(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    createOrder = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const {
@@ -73,9 +73,9 @@ export class OrderController {
                 } else if (payment_method === 'VIETQR') {
                     payment_url = paymentService.generateVietQR(order.id_hoadon, Number(order.tongtien));
                 }
-            } catch (paymentError: any) {
+            } catch (paymentError: unknown) {
                 console.error('Payment gateway error:', paymentError);
-                payment_error = paymentError.message || 'Payment gateway temporarily unavailable';
+                payment_error = paymentError instanceof Error ? paymentError.message : 'Payment gateway temporarily unavailable';
                 // Don't throw - order is created successfully, just payment URL generation failed
             }
 
@@ -99,7 +99,7 @@ export class OrderController {
      * GET /api/orders
      * Get user's orders
      */
-    async getOrders(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    getUserOrders = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const orders = await orderService.getUserOrders(userId);
@@ -118,7 +118,7 @@ export class OrderController {
      * GET /api/orders/:id
      * Get order by ID
      */
-    async getOrderById(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    getOrderById = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const orderId = parseInt(req.params.id);
@@ -147,7 +147,7 @@ export class OrderController {
      * PUT /api/orders/:id/cancel
      * Cancel order
      */
-    async cancelOrder(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    cancelOrder = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.user!.id;
             const orderId = parseInt(req.params.id);
@@ -172,3 +172,5 @@ export class OrderController {
         }
     }
 }
+
+export default new OrderController();

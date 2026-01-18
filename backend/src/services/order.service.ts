@@ -2,6 +2,35 @@ import { HoaDon, ChiTietHoaDon, GioHang, ChiTietGioHang, ThongSoKyThuat, DiaChi,
 import { CartService } from './cart.service';
 import { sequelize } from '../config/database';
 
+interface PlainOrder {
+    id_hoadon: number;
+    taikhoan_id: number;
+    tong_tien: number;
+    trangthai: string;
+    hinhthuc_thanhtoan: string;
+    ngay_dat: Date;
+    items?: Array<{
+        id_cthoadon: number;
+        hoadon_id: number;
+        thongsokythuat_id: number;
+        soluong: number;
+        gia_luc_mua: number;
+        thongsokythuat?: {
+            id_sanpham: number;
+            ten_hienthi: string;
+            sanpham?: {
+                ten_sanpham: string;
+                thuonghieu: string;
+                anh_daidien: string;
+            };
+        };
+    }>;
+}
+
+interface CartWithItems extends GioHang {
+    items?: ChiTietGioHang[];
+}
+
 const cartService = new CartService();
 
 export class OrderService {
@@ -137,7 +166,7 @@ export class OrderService {
                 transaction,
             });
 
-            if (!cart || !(cart as any).items || (cart as any).items.length === 0) {
+            if (!cart || !(cart as CartWithItems).items || (cart as CartWithItems).items!.length === 0) {
                 throw new Error('Cart is empty');
             }
 
@@ -154,7 +183,7 @@ export class OrderService {
 
             // Calculate total
             let totalAmount = 0;
-            for (const item of (cart as any).items) {
+            for (const item of (cart as CartWithItems).items!) {
                 // Validate stock
                 const variant = await ThongSoKyThuat.findByPk(item.thongsokythuat_id, { transaction });
                 if (!variant) {
@@ -181,7 +210,7 @@ export class OrderService {
             );
 
             // Create order items and update stock
-            for (const item of (cart as any).items) {
+            for (const item of (cart as CartWithItems).items!) {
                 await ChiTietHoaDon.create(
                     {
                         hoadon_id: order.id_hoadon,
@@ -253,8 +282,8 @@ export class OrderService {
     /**
      * Serialize order for frontend
      */
-    private serializeOrder(order: any) {
-        const plainOrder = order.toJSON ? order.toJSON() : order;
+    private serializeOrder = (order: HoaDon): Record<string, unknown> => {
+        const plainOrder = (order.toJSON ? order.toJSON() : order) as PlainOrder;
 
         // Map status
         const statusMap: Record<string, string> = {
@@ -276,18 +305,18 @@ export class OrderService {
         return {
             ma_hoa_don: plainOrder.id_hoadon,
             ma_tai_khoan: plainOrder.taikhoan_id,
-            tong_tien: parseFloat(plainOrder.tong_tien),
+            tong_tien: parseFloat(String(plainOrder.tong_tien)),
             trang_thai: statusMap[plainOrder.trangthai] || 'pending',
             phuong_thuc_thanh_toan: paymentMap[plainOrder.hinhthuc_thanhtoan] || 'cod',
             ngay_dat: plainOrder.ngay_dat,
-            chi_tiet_hoa_don: plainOrder.items?.map((item: any) => {
+            chi_tiet_hoa_don: plainOrder.items?.map((item) => {
                 const product = item.thongsokythuat?.sanpham;
                 return {
                     ma_chi_tiet: item.id_cthoadon,
                     ma_hoa_don: item.hoadon_id,
                     ma_san_pham: item.thongsokythuat_id,
                     so_luong: item.soluong,
-                    don_gia: parseFloat(item.gia_luc_mua),
+                    don_gia: parseFloat(String(item.gia_luc_mua)),
                     san_pham: item.thongsokythuat ? {
                         ma_san_pham: item.thongsokythuat.id_sanpham,
                         ten_san_pham: product?.ten_sanpham || item.thongsokythuat.ten_hienthi,
@@ -297,7 +326,7 @@ export class OrderService {
                 };
             }) || [],
         };
-    }
+    };
 
     /**
      * Get order by ID
