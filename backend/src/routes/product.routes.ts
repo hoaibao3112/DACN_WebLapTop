@@ -1,24 +1,23 @@
 import { Router } from 'express';
-import { ProductController } from '../controllers/product.controller';
+import productController from '../controllers/product.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requirePermission } from '../middleware/rbac.middleware';
 
 const router = Router();
-const productController = new ProductController();
 
 /**
  * @route   GET /api/products
  * @desc    Get all products
  * @access  Public
  */
-router.get('/', productController.getAll.bind(productController));
+router.get('/', productController.getAll);
 
 /**
  * @route   GET /api/products/:id
  * @desc    Get product by ID
  * @access  Public
  */
-router.get('/:id', productController.getById.bind(productController));
+router.get('/:id', productController.getById);
 
 /**
  * @route   POST /api/products
@@ -29,7 +28,7 @@ router.post(
     '/',
     authenticate,
     requirePermission('product.create'),
-    productController.create.bind(productController)
+    productController.create
 );
 
 /**
@@ -41,7 +40,7 @@ router.put(
     '/:id',
     authenticate,
     requirePermission('product.create'),
-    productController.update.bind(productController)
+    productController.update
 );
 
 /**
@@ -53,7 +52,7 @@ router.delete(
     '/:id',
     authenticate,
     requirePermission('product.create'),
-    productController.delete.bind(productController)
+    productController.delete
 );
 
 export default router;

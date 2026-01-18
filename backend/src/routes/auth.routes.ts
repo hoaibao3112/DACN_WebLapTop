@@ -1,13 +1,12 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import passport from 'passport';
-import { AuthController } from '../controllers/auth.controller';
+import authController from '../controllers/auth.controller';
 import { validate } from '../middleware/validation.middleware';
 import { authenticate } from '../middleware/auth.middleware';
 import '../config/passport'; // Initialize passport strategies
 
 const router = Router();
-const authController = new AuthController();
 
 /**
  * @route   POST /api/auth/register
@@ -23,7 +22,7 @@ router.post(
             .isLength({ min: 6 })
             .withMessage('Password must be at least 6 characters long'),
     ]),
-    authController.register.bind(authController)
+    authController.register
 );
 
 /**
