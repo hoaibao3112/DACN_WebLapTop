@@ -1,5 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional, Association, HasManyGetAssociationsMixin } from 'sequelize';
 import { sequelize } from '../config/database';
+import { ChiTietHoaDon } from './chitiet-hoadon.model';
 
 interface HoaDonAttributes {
     id_hoadon: number;
@@ -21,6 +22,14 @@ export class HoaDon extends Model<HoaDonAttributes, HoaDonCreationAttributes> im
     public tong_tien!: number;
     public trangthai!: 'Chờ duyệt' | 'Đang giao' | 'Hoàn thành' | 'Hủy';
     public hinhthuc_thanhtoan!: 'COD' | 'Chuyển khoản' | 'VNPay' | 'MoMo' | 'ZaloPay';
+
+    // Association properties
+    public items?: ChiTietHoaDon[];
+    public getItems!: HasManyGetAssociationsMixin<ChiTietHoaDon>;
+
+    public static associations: {
+        items: Association<HoaDon, ChiTietHoaDon>;
+    };
 }
 
 HoaDon.init(

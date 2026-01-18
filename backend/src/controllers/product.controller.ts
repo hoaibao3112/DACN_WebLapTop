@@ -8,14 +8,18 @@ export class ProductController {
      * GET /api/products
      * Get all products
      */
-    async getAll(req: Request, res: Response, next: NextFunction) {
+    async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const filters = {
                 page: req.query.page ? parseInt(req.query.page as string) : undefined,
                 limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
-                danhmuc_id: req.query.danhmuc_id ? parseInt(req.query.danhmuc_id as string) : undefined,
-                thuonghieu: req.query.thuonghieu as string,
+                category: req.query.category ? parseInt(req.query.category as string) : undefined,
+                brand: req.query.brand as string,
+                minPrice: req.query.minPrice ? parseInt(req.query.minPrice as string) : undefined,
+                maxPrice: req.query.maxPrice ? parseInt(req.query.maxPrice as string) : undefined,
                 search: req.query.search as string,
+                status: req.query.status as string,
+                sortBy: req.query.sortBy as string,
             };
 
             const result = await productService.getAllProducts(filters);
@@ -35,9 +39,20 @@ export class ProductController {
      * GET /api/products/:id
      * Get product by ID
      */
-    async getById(req: Request, res: Response, next: NextFunction) {
+    async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const product = await productService.getProductById(parseInt(req.params.id));
+            const productId = parseInt(req.params.id);
+
+            // Validate product ID
+            if (isNaN(productId) || productId <= 0) {
+                res.status(400).json({
+                    success: false,
+                    message: 'Invalid product ID',
+                });
+                return;
+            }
+
+            const product = await productService.getProductById(productId);
 
             res.status(200).json({
                 success: true,
@@ -53,7 +68,7 @@ export class ProductController {
      * POST /api/products
      * Create new product
      */
-    async create(req: Request, res: Response, next: NextFunction) {
+    async create(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const product = await productService.createProduct(req.body);
 
@@ -71,9 +86,20 @@ export class ProductController {
      * PUT /api/products/:id
      * Update product
      */
-    async update(req: Request, res: Response, next: NextFunction) {
+    async update(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const product = await productService.updateProduct(parseInt(req.params.id), req.body);
+            const productId = parseInt(req.params.id);
+
+            // Validate product ID
+            if (isNaN(productId) || productId <= 0) {
+                res.status(400).json({
+                    success: false,
+                    message: 'Invalid product ID',
+                });
+                return;
+            }
+
+            const product = await productService.updateProduct(productId, req.body);
 
             res.status(200).json({
                 success: true,
@@ -89,9 +115,20 @@ export class ProductController {
      * DELETE /api/products/:id
      * Delete product
      */
-    async delete(req: Request, res: Response, next: NextFunction) {
+    async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            await productService.deleteProduct(parseInt(req.params.id));
+            const productId = parseInt(req.params.id);
+
+            // Validate product ID
+            if (isNaN(productId) || productId <= 0) {
+                res.status(400).json({
+                    success: false,
+                    message: 'Invalid product ID',
+                });
+                return;
+            }
+
+            await productService.deleteProduct(productId);
 
             res.status(200).json({
                 success: true,

@@ -79,7 +79,7 @@ export const initializeAssociations = () => {
     // GioHang -> ChiTietGioHang (One-to-Many)
     GioHang.hasMany(ChiTietGioHang, {
         foreignKey: 'giohang_id',
-        as: 'items',
+        as: 'chi_tiet_gio_hang',
     });
     ChiTietGioHang.belongsTo(GioHang, {
         foreignKey: 'giohang_id',

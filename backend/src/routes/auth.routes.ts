@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
+import passport from 'passport';
 import { AuthController } from '../controllers/auth.controller';
 import { validate } from '../middleware/validation.middleware';
 import { authenticate } from '../middleware/auth.middleware';
+import '../config/passport'; // Initialize passport strategies
 
 const router = Router();
 const authController = new AuthController();
@@ -55,5 +57,47 @@ router.post(
  * @access  Private
  */
 router.get('/profile', authenticate, authController.getProfile.bind(authController));
+
+/**
+ * @route   GET /api/auth/google
+ * @desc    Google OAuth login
+ * @access  Public
+ */
+router.get(
+    '/google',
+    passport.authenticate('google', { scope: ['profile', 'email'], session: false })
+);
+
+/**
+ * @route   GET /api/auth/google/callback
+ * @desc    Google OAuth callback
+ * @access  Public
+ */
+router.get(
+    '/google/callback',
+    passport.authenticate('google', { session: false }),
+    authController.googleCallback.bind(authController)
+);
+
+/**
+ * @route   GET /api/auth/facebook
+ * @desc    Facebook OAuth login
+ * @access  Public
+ */
+router.get(
+    '/facebook',
+    passport.authenticate('facebook', { scope: ['email'], session: false })
+);
+
+/**
+ * @route   GET /api/auth/facebook/callback
+ * @desc    Facebook OAuth callback
+ * @access  Public
+ */
+router.get(
+    '/facebook/callback',
+    passport.authenticate('facebook', { session: false }),
+    authController.facebookCallback.bind(authController)
+);
 
 export default router;

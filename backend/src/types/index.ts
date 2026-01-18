@@ -44,3 +44,15 @@ export enum ChatRole {
     USER = 'User',
     ASSISTANT = 'Assistant',
 }
+
+// AuthRequest type for controllers
+import { Request as ExpressRequest } from 'express';
+
+export interface AuthRequest extends ExpressRequest {
+    user?: {
+        id: number;
+        email: string;
+        roles: string[];
+        permissions: string[];
+    };
+}

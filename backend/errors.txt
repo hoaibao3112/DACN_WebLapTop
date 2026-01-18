@@ -1,0 +1,10 @@
+﻿src/controllers/address.controller.ts(2,10): error TS2305: Module '"../types"' has no exported member 'AuthRequest'.
+src/controllers/address.controller.ts(121,50): error TS2339: Property 'setDefaultAddress' does not exist on type 'AddressService'.
+src/controllers/cart.controller.ts(2,10): error TS2305: Module '"../types"' has no exported member 'AuthRequest'.
+src/controllers/order.controller.ts(2,10): error TS2305: Module '"../types"' has no exported member 'AuthRequest'.
+src/services/order.service.ts(33,32): error TS2339: Property 'items' does not exist on type 'GioHang'.
+src/services/order.service.ts(33,46): error TS2339: Property 'items' does not exist on type 'GioHang'.
+src/services/order.service.ts(50,37): error TS2339: Property 'items' does not exist on type 'GioHang'.
+src/services/order.service.ts(77,37): error TS2339: Property 'items' does not exist on type 'GioHang'.
+src/services/order.service.ts(190,23): error TS2339: Property 'items' does not exist on type 'HoaDon'.
+src/services/order.service.ts(191,42): error TS2339: Property 'items' does not exist on type 'HoaDon'.

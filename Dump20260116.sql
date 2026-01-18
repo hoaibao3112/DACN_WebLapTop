@@ -362,7 +362,22 @@ CREATE TABLE `sanpham` (
 
 LOCK TABLES `sanpham` WRITE;
 /*!40000 ALTER TABLE `sanpham` DISABLE KEYS */;
-INSERT INTO `sanpham` VALUES (1,'Dell XPS 13 9320','Dell',4,'Ultrabook cao cấp, màn hình FHD+',NULL,'2026-01-16 06:13:59'),(2,'HP Pavilion Gaming 15','HP',1,'Laptop gaming giá tốt, GTX 1650',NULL,'2026-01-16 06:13:59');
+INSERT INTO `sanpham` VALUES 
+(1,'Dell XPS 13 9320','Dell',4,'Ultrabook cao cấp, màn hình FHD+',NULL,'2026-01-16 06:13:59'),
+(2,'HP Pavilion Gaming 15','HP',1,'Laptop gaming giá tốt, GTX 1650',NULL,'2026-01-16 06:13:59'),
+(3,'Lenovo Legion 5 Pro','Lenovo',1,'Gaming laptop mạnh mẽ, RTX 3060',NULL,'2026-01-16 06:13:59'),
+(4,'Asus ROG Strix G15','Asus',1,'Gaming laptop cao cấp, RTX 3070',NULL,'2026-01-16 06:13:59'),
+(5,'Acer Swift 3','Acer',4,'Laptop mỏng nhẹ, pin tốt',NULL,'2026-01-16 06:13:59'),
+(6,'MSI Creator Z16','MSI',3,'Laptop đồ họa chuyên nghiệp, RTX 3060',NULL,'2026-01-16 06:13:59'),
+(7,'LG Gram 17','LG',4,'Laptop siêu nhẹ 17 inch',NULL,'2026-01-16 06:13:59'),
+(8,'Dell Latitude 5430','Dell',2,'Laptop văn phòng bền bỉ',NULL,'2026-01-16 06:13:59'),
+(9,'HP EliteBook 840 G9','HP',2,'Laptop doanh nhân cao cấp',NULL,'2026-01-16 06:13:59'),
+(10,'Lenovo ThinkPad X1 Carbon','Lenovo',2,'Laptop doanh nghiệp hàng đầu',NULL,'2026-01-16 06:13:59'),
+(11,'Asus ZenBook 14','Asus',4,'Ultrabook đẹp, hiệu năng tốt',NULL,'2026-01-16 06:13:59'),
+(12,'Acer Predator Helios 300','Acer',1,'Gaming laptop hiệu năng cao',NULL,'2026-01-16 06:13:59'),
+(13,'MSI GS66 Stealth','MSI',1,'Gaming laptop mỏng nhẹ cao cấp',NULL,'2026-01-16 06:13:59'),
+(14,'MacBook Pro 14','Apple',3,'Laptop dành cho nhà sáng tạo, chip M3',NULL,'2026-01-16 06:13:59'),
+(15,'Dell Inspiron 15 3520','Dell',2,'Laptop văn phòng giá rẻ',NULL,'2026-01-16 06:13:59');
 /*!40000 ALTER TABLE `sanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -460,7 +475,53 @@ CREATE TABLE `thongso_kythuat` (
 
 LOCK TABLES `thongso_kythuat` WRITE;
 /*!40000 ALTER TABLE `thongso_kythuat` DISABLE KEYS */;
-INSERT INTO `thongso_kythuat` VALUES (1,1,'DELL-XPS13-I5-8GB-256GB','Dell XPS 13 - Core i5/8GB/256GB','Intel Core i5-1235U','8GB LPDDR5','256GB SSD NVMe','Intel Iris Xe','13.4\" FHD+ IPS','1.24kg','2x Thunderbolt 4, 1x 3.5mm','Windows 11',25990000.00,15),(2,1,'DELL-XPS13-I7-16GB-512GB','Dell XPS 13 - Core i7/16GB/512GB','Intel Core i7-1255U','16GB LPDDR5','512GB SSD NVMe','Intel Iris Xe','13.4\" FHD+ IPS','1.24kg','2x Thunderbolt 4, 1x 3.5mm','Windows 11',32990000.00,10),(3,2,'HP-PAV15-I5-8GB-512GB-1650','HP Pavilion Gaming 15 - i5/8GB/512GB/GTX1650','Intel Core i5-11300H','8GB DDR4','512GB SSD NVMe','NVIDIA GTX 1650 4GB','15.6\" FHD 144Hz','2.08kg','1x USB-C, 3x USB-A, HDMI','Windows 11',18990000.00,20);
+INSERT INTO `thongso_kythuat` VALUES 
+-- Dell XPS 13
+(1,1,'DELL-XPS13-I5-8GB-256GB','Dell XPS 13 - Core i5/8GB/256GB','Intel Core i5-1235U','8GB LPDDR5','256GB SSD NVMe','Intel Iris Xe','13.4\" FHD+ IPS','1.24kg','2x Thunderbolt 4, 1x 3.5mm','Windows 11',25990000.00,15),
+(2,1,'DELL-XPS13-I7-16GB-512GB','Dell XPS 13 - Core i7/16GB/512GB','Intel Core i7-1255U','16GB LPDDR5','512GB SSD NVMe','Intel Iris Xe','13.4\" FHD+ IPS','1.24kg','2x Thunderbolt 4, 1x 3.5mm','Windows 11',32990000.00,10),
+-- HP Pavilion Gaming 15
+(3,2,'HP-PAV15-I5-8GB-512GB-1650','HP Pavilion Gaming 15 - i5/8GB/512GB/GTX1650','Intel Core i5-11300H','8GB DDR4','512GB SSD NVMe','NVIDIA GTX 1650 4GB','15.6\" FHD 144Hz','2.08kg','1x USB-C, 3x USB-A, HDMI','Windows 11',18990000.00,20),
+(4,2,'HP-PAV15-I7-16GB-1TB-3050','HP Pavilion Gaming 15 - i7/16GB/1TB/RTX3050','Intel Core i7-11800H','16GB DDR4','1TB SSD NVMe','NVIDIA RTX 3050 4GB','15.6\" FHD 144Hz','2.08kg','1x USB-C, 3x USB-A, HDMI','Windows 11',24990000.00,12),
+-- Lenovo Legion 5 Pro
+(5,3,'LENOVO-LEG5P-R5-16GB-512GB-3060','Legion 5 Pro - Ryzen 5/16GB/512GB/RTX3060','AMD Ryzen 5 5600H','16GB DDR4','512GB SSD NVMe','NVIDIA RTX 3060 6GB','16\" WQXGA 165Hz','2.5kg','3x USB-A, 1x USB-C, HDMI','Windows 11',29990000.00,18),
+(6,3,'LENOVO-LEG5P-R7-32GB-1TB-3070','Legion 5 Pro - Ryzen 7/32GB/1TB/RTX3070','AMD Ryzen 7 5800H','32GB DDR4','1TB SSD NVMe','NVIDIA RTX 3070 8GB','16\" WQXGA 165Hz','2.5kg','3x USB-A, 1x USB-C, HDMI','Windows 11',39990000.00,8),
+-- Asus ROG Strix G15
+(7,4,'ASUS-ROG-I7-16GB-512GB-3070','ROG Strix G15 - i7/16GB/512GB/RTX3070','Intel Core i7-12700H','16GB DDR5','512GB SSD NVMe','NVIDIA RTX 3070 8GB','15.6\" FHD 300Hz','2.3kg','3x USB-A, 1x USB-C, HDMI','Windows 11',42990000.00,10),
+(8,4,'ASUS-ROG-I9-32GB-1TB-3080','ROG Strix G15 - i9/32GB/1TB/RTX3080','Intel Core i9-12900H','32GB DDR5','1TB SSD NVMe','NVIDIA RTX 3080 10GB','15.6\" QHD 240Hz','2.3kg','3x USB-A, 1x USB-C, HDMI','Windows 11',54990000.00,5),
+-- Acer Swift 3
+(9,5,'ACER-SWIFT3-I5-8GB-512GB','Acer Swift 3 - i5/8GB/512GB','Intel Core i5-1240P','8GB LPDDR4X','512GB SSD NVMe','Intel Iris Xe','14\" FHD IPS','1.2kg','2x USB-C, 1x USB-A, HDMI','Windows 11',15990000.00,25),
+(10,5,'ACER-SWIFT3-R7-16GB-512GB','Acer Swift 3 - Ryzen 7/16GB/512GB','AMD Ryzen 7 5825U','16GB LPDDR4X','512GB SSD NVMe','AMD Radeon','14\" FHD IPS','1.2kg','2x USB-C, 1x USB-A, HDMI','Windows 11',18990000.00,15),
+-- MSI Creator Z16
+(11,6,'MSI-Z16-I7-16GB-1TB-3060','MSI Creator Z16 - i7/16GB/1TB/RTX3060','Intel Core i7-11800H','16GB DDR4','1TB SSD NVMe','NVIDIA RTX 3060 6GB','16\" QHD+ 120Hz','2.2kg','2x USB-A, 2x USB-C, HDMI','Windows 11',45990000.00,7),
+(12,6,'MSI-Z16-I9-32GB-2TB-3070','MSI Creator Z16 - i9/32GB/2TB/RTX3070','Intel Core i9-11900H','32GB DDR4','2TB SSD NVMe','NVIDIA RTX 3070 8GB','16\" QHD+ 120Hz','2.2kg','2x USB-A, 2x USB-C, HDMI','Windows 11',59990000.00,4),
+-- LG Gram 17
+(13,7,'LG-GRAM17-I5-16GB-512GB','LG Gram 17 - i5/16GB/512GB','Intel Core i5-1240P','16GB LPDDR5','512GB SSD NVMe','Intel Iris Xe','17\" WQXGA IPS','1.35kg','2x USB-C, 2x USB-A, HDMI','Windows 11',34990000.00,12),
+(14,7,'LG-GRAM17-I7-16GB-1TB','LG Gram 17 - i7/16GB/1TB','Intel Core i7-1260P','16GB LPDDR5','1TB SSD NVMe','Intel Iris Xe','17\" WQXGA IPS','1.35kg','2x USB-C, 2x USB-A, HDMI','Windows 11',39990000.00,8),
+-- Dell Latitude 5430
+(15,8,'DELL-LAT5430-I5-8GB-256GB','Dell Latitude 5430 - i5/8GB/256GB','Intel Core i5-1245U','8GB DDR4','256GB SSD NVMe','Intel UHD','14\" FHD','1.36kg','2x USB-A, 2x USB-C, HDMI','Windows 11 Pro',22990000.00,20),
+(16,8,'DELL-LAT5430-I7-16GB-512GB','Dell Latitude 5430 - i7/16GB/512GB','Intel Core i7-1265U','16GB DDR4','512GB SSD NVMe','Intel Iris Xe','14\" FHD','1.36kg','2x USB-A, 2x USB-C, HDMI','Windows 11 Pro',28990000.00,15),
+-- HP EliteBook 840 G9
+(17,9,'HP-ELITE840-I5-16GB-512GB','HP EliteBook 840 G9 - i5/16GB/512GB','Intel Core i5-1235U','16GB DDR4','512GB SSD NVMe','Intel Iris Xe','14\" FHD','1.32kg','2x USB-A, 2x USB-C, HDMI','Windows 11 Pro',27990000.00,18),
+(18,9,'HP-ELITE840-I7-32GB-1TB','HP EliteBook 840 G9 - i7/32GB/1TB','Intel Core i7-1255U','32GB DDR4','1TB SSD NVMe','Intel Iris Xe','14\" FHD','1.32kg','2x USB-A, 2x USB-C, HDMI','Windows 11 Pro',35990000.00,10),
+-- Lenovo ThinkPad X1 Carbon
+(19,10,'LENOVO-X1C-I5-16GB-512GB','ThinkPad X1 Carbon - i5/16GB/512GB','Intel Core i5-1235U','16GB LPDDR5','512GB SSD NVMe','Intel Iris Xe','14\" FHD IPS','1.12kg','2x USB-C, 2x USB-A, HDMI','Windows 11 Pro',38990000.00,14),
+(20,10,'LENOVO-X1C-I7-32GB-1TB','ThinkPad X1 Carbon - i7/32GB/1TB','Intel Core i7-1255U','32GB LPDDR5','1TB SSD NVMe','Intel Iris Xe','14\" 2.8K OLED','1.12kg','2x USB-C, 2x USB-A, HDMI','Windows 11 Pro',49990000.00,7),
+-- Asus ZenBook 14
+(21,11,'ASUS-ZEN14-I5-8GB-512GB','Asus ZenBook 14 - i5/8GB/512GB','Intel Core i5-1240P','8GB LPDDR5','512GB SSD NVMe','Intel Iris Xe','14\" FHD OLED','1.39kg','1x USB-A, 2x USB-C, HDMI','Windows 11',23990000.00,16),
+(22,11,'ASUS-ZEN14-I7-16GB-512GB','Asus ZenBook 14 - i7/16GB/512GB','Intel Core i7-1260P','16GB LPDDR5','512GB SSD NVMe','Intel Iris Xe','14\" 2.8K OLED','1.39kg','1x USB-A, 2x USB-C, HDMI','Windows 11',29990000.00,12),
+-- Acer Predator Helios 300
+(23,12,'ACER-PRED300-I5-16GB-512GB-3050TI','Predator Helios 300 - i5/16GB/512GB/RTX3050Ti','Intel Core i5-11400H','16GB DDR4','512GB SSD NVMe','NVIDIA RTX 3050 Ti 4GB','15.6\" FHD 144Hz','2.3kg','3x USB-A, 1x USB-C, HDMI','Windows 11',25990000.00,14),
+(24,12,'ACER-PRED300-I7-16GB-1TB-3060','Predator Helios 300 - i7/16GB/1TB/RTX3060','Intel Core i7-11800H','16GB DDR4','1TB SSD NVMe','NVIDIA RTX 3060 6GB','15.6\" FHD 165Hz','2.3kg','3x USB-A, 1x USB-C, HDMI','Windows 11',32990000.00,10),
+-- MSI GS66 Stealth
+(25,13,'MSI-GS66-I7-16GB-1TB-3060','MSI GS66 Stealth - i7/16GB/1TB/RTX3060','Intel Core i7-11800H','16GB DDR4','1TB SSD NVMe','NVIDIA RTX 3060 6GB','15.6\" FHD 240Hz','2.1kg','3x USB-A, 1x USB-C, HDMI','Windows 11',44990000.00,9),
+(26,13,'MSI-GS66-I9-32GB-2TB-3080','MSI GS66 Stealth - i9/32GB/2TB/RTX3080','Intel Core i9-11900H','32GB DDR4','2TB SSD NVMe','NVIDIA RTX 3080 10GB','15.6\" QHD 240Hz','2.1kg','3x USB-A, 1x USB-C, HDMI','Windows 11',59990000.00,5),
+-- MacBook Pro 14
+(27,14,'MBP14-M3-8GB-512GB','MacBook Pro 14 - M3/8GB/512GB','Apple M3 8-core','8GB Unified','512GB SSD','10-core GPU','14.2\" Liquid Retina XDR','1.55kg','3x Thunderbolt 4, HDMI, SD','macOS Sonoma',49990000.00,12),
+(28,14,'MBP14-M3PRO-18GB-512GB','MacBook Pro 14 - M3 Pro/18GB/512GB','Apple M3 Pro 11-core','18GB Unified','512GB SSD','14-core GPU','14.2\" Liquid Retina XDR','1.55kg','3x Thunderbolt 4, HDMI, SD','macOS Sonoma',54990000.00,8),
+(29,14,'MBP14-M3PRO-36GB-1TB','MacBook Pro 14 - M3 Pro/36GB/1TB','Apple M3 Pro 12-core','36GB Unified','1TB SSD','18-core GPU','14.2\" Liquid Retina XDR','1.55kg','3x Thunderbolt 4, HDMI, SD','macOS Sonoma',69990000.00,6),
+-- Dell Inspiron 15 3520
+(30,15,'DELL-INS3520-I3-8GB-256GB','Dell Inspiron 15 3520 - i3/8GB/256GB','Intel Core i3-1215U','8GB DDR4','256GB SSD NVMe','Intel UHD','15.6\" FHD','1.65kg','2x USB-A, 1x USB-C, HDMI','Windows 11',12990000.00,30),
+(31,15,'DELL-INS3520-I5-8GB-512GB','Dell Inspiron 15 3520 - i5/8GB/512GB','Intel Core i5-1235U','8GB DDR4','512GB SSD NVMe','Intel Iris Xe','15.6\" FHD','1.65kg','2x USB-A, 1x USB-C, HDMI','Windows 11',15990000.00,25);
 /*!40000 ALTER TABLE `thongso_kythuat` ENABLE KEYS */;
 UNLOCK TABLES;
 

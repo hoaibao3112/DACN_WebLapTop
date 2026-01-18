@@ -1,5 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional, Association, HasManyGetAssociationsMixin } from 'sequelize';
 import { sequelize } from '../config/database';
+import { ChiTietGioHang } from './chitiet-giohang.model';
 
 interface GioHangAttributes {
     id_giohang: number;
@@ -13,6 +14,16 @@ export class GioHang extends Model<GioHangAttributes, GioHangCreationAttributes>
     public id_giohang!: number;
     public taikhoan_id!: number;
     public ngay_tao!: Date;
+
+    // Association properties
+    public items?: ChiTietGioHang[];
+    public chi_tiet_gio_hang?: ChiTietGioHang[];
+    public getItems!: HasManyGetAssociationsMixin<ChiTietGioHang>;
+
+    public static associations: {
+        items: Association<GioHang, ChiTietGioHang>;
+        chi_tiet_gio_hang: Association<GioHang, ChiTietGioHang>;
+    };
 }
 
 GioHang.init(
