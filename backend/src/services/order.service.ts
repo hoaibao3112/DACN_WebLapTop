@@ -125,6 +125,19 @@ export class OrderService {
                 });
             }
 
+            // Clear user's cart after successful order
+            const userCart = await GioHang.findOne({
+                where: { taikhoan_id: userId },
+                transaction,
+            });
+
+            if (userCart) {
+                await ChiTietGioHang.destroy({
+                    where: { giohang_id: userCart.id_giohang },
+                    transaction,
+                });
+            }
+
             await transaction.commit();
 
             // Return order with details

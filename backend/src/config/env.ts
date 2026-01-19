@@ -39,6 +39,7 @@ interface EnvConfig {
     ZALOPAY_KEY1: string;
     ZALOPAY_KEY2: string;
     ZALOPAY_ENDPOINT: string;
+    ZALOPAY_REDIRECT_URL: string;
     ZALOPAY_IPN_URL: string;
     // Frontend
     FRONTEND_URL: string;
@@ -89,6 +90,7 @@ export const env: EnvConfig = {
     ZALOPAY_KEY1: getEnvVariable('ZALOPAY_KEY1'),
     ZALOPAY_KEY2: getEnvVariable('ZALOPAY_KEY2'),
     ZALOPAY_ENDPOINT: getEnvVariable('ZALOPAY_ENDPOINT'),
+    ZALOPAY_REDIRECT_URL: getEnvVariable('ZALOPAY_REDIRECT_URL'),
     ZALOPAY_IPN_URL: getEnvVariable('ZALOPAY_IPN_URL'),
     // Frontend
     FRONTEND_URL: getEnvVariable('FRONTEND_URL', 'http://localhost:3000'),

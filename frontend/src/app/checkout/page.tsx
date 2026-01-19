@@ -16,7 +16,7 @@ type PaymentMethod = 'COD' | 'VNPAY' | 'MOMO' | 'ZALOPAY' | 'VIETQR';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cartItems, getCartTotal, loading: cartLoading } = useCart();
+  const { cartItems, getCartTotal, loading: cartLoading, refreshCart } = useCart();
   const { user, isAuthenticated } = useAuth();
 
   const [loading, setLoading] = useState(false);
@@ -96,6 +96,9 @@ export default function CheckoutPage() {
       const data = await response.json();
 
       if (data.success) {
+        // Refresh cart to clear it from frontend state
+        await refreshCart();
+
         // Check if there was a payment gateway error
         if (data.data.payment_error) {
           // Order created but payment URL failed

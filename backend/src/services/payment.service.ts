@@ -156,28 +156,40 @@ export class PaymentService {
      * Create ZaloPay payment URL
      */
     async createZaloPayUrl(orderCode: string, amount: number, orderInfo: string): Promise<string> {
-        const appid = parseInt(env.ZALOPAY_APP_ID);
+        const appid = env.ZALOPAY_APP_ID; // Keep as string
         const key1 = env.ZALOPAY_KEY1;
         const endpoint = env.ZALOPAY_ENDPOINT;
 
-        const transID = `${Date.now()}`;
+        const transID = Date.now();
         const apptime = Date.now();
-        const embeddata = JSON.stringify({});
+        
+        // IMPORTANT: Format YYMMDD (6 digits), NOT YYYYMMDD
+        const date = new Date();
+        const yy = String(date.getFullYear()).slice(2); // Last 2 digits of year
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const yymmdd = yy + mm + dd;
+
+        // embed_data must have redirecturl for web payments
+        const embeddata = JSON.stringify({
+            redirecturl: env.ZALOPAY_REDIRECT_URL
+        });
         const item = JSON.stringify([]);
 
         const order: ZaloPayOrder = {
-            app_id: appid,
-            app_trans_id: `${new Date().getFullYear()}${new Date().getMonth() + 1}${new Date().getDate()}_${orderCode}`,
+            app_id: parseInt(appid), // Convert to number for consistency
+            app_trans_id: `${yymmdd}_${orderCode}`, // Format: YYMMDD_orderCode
             app_user: 'user123',
             app_time: apptime,
             item: item,
             embed_data: embeddata,
-            amount: amount,
+            amount: Math.floor(amount),
             description: orderInfo,
             bank_code: '',
             callback_url: env.ZALOPAY_IPN_URL,
         };
 
+        // Create MAC: appid|app_trans_id|appuser|amount|apptime|embeddata|item
         const data =
             appid +
             '|' +
@@ -195,6 +207,14 @@ export class PaymentService {
         order.mac = crypto.createHmac('sha256', key1).update(data).digest('hex');
 
         try {
+            console.log('🔍 ZaloPay Debug:', {
+                endpoint,
+                app_id: appid,
+                app_trans_id: order.app_trans_id,
+                amount: order.amount,
+                mac_string: data
+            });
+
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -203,28 +223,44 @@ export class PaymentService {
 
             const result = await response.json() as ZaloPayResponse;
 
+            console.log('📨 ZaloPay Response:', result);
+
             if (result.return_code === 1) {
+                // Return order_url for desktop/mobile web
                 return result.order_url!;
             } else {
-                throw new Error(result.return_message || 'ZaloPay payment creation failed');
+                console.error('❌ ZaloPay Error Details:', {
+                    return_code: result.return_code,
+                    return_message: result.return_message,
+                    sub_return_code: (result as any).sub_return_code,
+                    sub_return_message: (result as any).sub_return_message
+                });
+                throw new Error(result.return_message || `ZaloPay error: ${result.return_code}`);
             }
         } catch (error) {
-            throw new Error('Cannot connect to ZaloPay');
+            console.error('❌ ZaloPay Exception:', error);
+            if (error instanceof Error && error.message && !error.message.includes('fetch')) {
+                throw error;
+            }
+            const errorMessage = error instanceof Error ? error.message : 'Network error';
+            throw new Error(`Cannot connect to ZaloPay: ${errorMessage}`);
         }
     }
 
     /**
      * Generate VietQR code
+     * NOTE: Cần cập nhật bankId và accountNo với thông tin thật của bạn
      */
     generateVietQR(orderId: number, amount: number): string {
         // VietQR format: BankID|AccountNumber|Template|Amount|Description|AccountName
-        const bankId = '970422'; // MB Bank (có thể thay đổi)
-        const accountNo = '0123456789'; // Số tài khoản (cần cấu hình thật)
+        // Danh sách bankId: https://api.vietqr.io/v2/banks
+        const bankId = '970415'; // Vietinbank (thay đổi theo ngân hàng của bạn)
+        const accountNo = '1234567890'; // ⚠️ QUAN TRỌNG: Thay bằng số tài khoản thật của bạn
         const template = 'compact2';
-        const description = `DH${orderId}`;
-        const accountName = 'LAPTOP SHOP';
+        const description = `Thanh toan don hang ${orderId}`;
+        const accountName = 'LAPTOP SHOP'; // Tên chủ tài khoản
 
-        // Generate QR URL (sử dụng API VietQR)
+        // Generate QR URL (sử dụng API VietQR - Free service)
         const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount}&addInfo=${encodeURIComponent(description)}&accountName=${encodeURIComponent(accountName)}`;
 
         return qrUrl;
