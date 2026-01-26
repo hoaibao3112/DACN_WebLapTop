@@ -8,7 +8,7 @@ export class ProductController {
      * GET /api/products
      * Get all products
      */
-    getAll = async(req: Request, res: Response, next: NextFunction) => {
+    getAll = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const filters = {
                 page: req.query.page ? parseInt(req.query.page as string) : undefined,
@@ -134,6 +134,22 @@ export class ProductController {
             res.status(200).json({
                 success: true,
                 message: 'Product deleted successfully',
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    /**
+     * GET /api/products/categories
+     * Get all categories
+     */
+    getCategories = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const categories = await productService.getAllCategories();
+            res.status(200).json({
+                success: true,
+                data: categories,
             });
         } catch (error) {
             next(error);

@@ -5,6 +5,7 @@ import cartRoutes from './cart.routes';
 import orderRoutes from './order.routes';
 import addressRoutes from './address.routes';
 import paymentRoutes from './payment.routes';
+import adminRoutes from './admin.routes';
 
 const router = Router();
 
@@ -15,6 +16,7 @@ router.use('/cart', cartRoutes);
 router.use('/orders', orderRoutes);
 router.use('/addresses', addressRoutes);
 router.use('/payments', paymentRoutes);
+router.use('/admin', adminRoutes);
 
 // Health check
 router.get('/health', (_req, res) => {

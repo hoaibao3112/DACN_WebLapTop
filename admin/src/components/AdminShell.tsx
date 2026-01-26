@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function AdminShell({
     children,
@@ -10,7 +10,30 @@ export default function AdminShell({
     children: React.ReactNode;
 }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [user, setUser] = useState<{ hoten: string; email: string } | null>(null);
     const pathname = usePathname();
+    const router = useRouter();
+
+    React.useEffect(() => {
+        const storedUser = localStorage.getItem('adminUser');
+        const token = localStorage.getItem('accessToken');
+
+        if (!token && pathname !== '/login') {
+            router.push('/login');
+            return;
+        }
+
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, [pathname, router]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('adminUser');
+        router.push('/login');
+    };
 
     const menuItems = [
         { name: 'Tổng quan', icon: '📊', path: '/' },
@@ -55,8 +78,8 @@ export default function AdminShell({
                                 key={item.path}
                                 href={item.path}
                                 className={`flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 group ${isActive
-                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
-                                        : 'text-gray-600 hover:bg-gray-100'
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                                    : 'text-gray-600 hover:bg-gray-100'
                                     }`}
                             >
                                 <span className="text-xl">{item.icon}</span>
@@ -70,7 +93,10 @@ export default function AdminShell({
                 </nav>
 
                 <div className="p-4 border-t border-gray-100">
-                    <button className="w-full flex items-center space-x-3 p-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-medium">
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center space-x-3 p-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-medium"
+                    >
                         <span className="text-xl">📤</span>
                         <span className={!isSidebarOpen ? 'hidden' : ''}>Đăng xuất</span>
                     </button>
@@ -103,7 +129,9 @@ export default function AdminShell({
                         <div className="h-8 w-px bg-gray-200"></div>
                         <div className="flex items-center space-x-3 cursor-pointer group">
                             <div className="text-right">
-                                <p className="text-sm font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Nguyễn Văn A</p>
+                                <p className="text-sm font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
+                                    {user?.hoten || 'Đang tải...'}
+                                </p>
                                 <p className="text-[11px] text-gray-500 uppercase tracking-wider">Quản trị viên</p>
                             </div>
                             <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white shadow-sm overflow-hidden">

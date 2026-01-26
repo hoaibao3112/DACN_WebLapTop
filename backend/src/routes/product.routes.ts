@@ -13,6 +13,13 @@ const router = Router();
 router.get('/', productController.getAll);
 
 /**
+ * @route   GET /api/products/categories
+ * @desc    Get all categories
+ * @access  Public
+ */
+router.get('/categories', productController.getCategories);
+
+/**
  * @route   GET /api/products/:id
  * @desc    Get product by ID
  * @access  Public

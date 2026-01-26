@@ -102,6 +102,30 @@ export class AdminService {
             }
         };
     }
+
+    /**
+     * Update order status
+     */
+    async updateOrderStatus(orderId: number, status: string) {
+        const order = await HoaDon.findByPk(orderId);
+        if (!order) {
+            throw new Error('Order not found');
+        }
+        await order.update({ trangthai: status as any });
+        return order;
+    }
+
+    /**
+     * Toggle user status (active/inactive)
+     */
+    async toggleUserStatus(userId: number) {
+        const user = await TaiKhoan.findByPk(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        await user.update({ trangthai: !user.trangthai });
+        return user;
+    }
 }
 
 export default new AdminService();

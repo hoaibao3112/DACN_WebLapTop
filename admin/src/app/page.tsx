@@ -1,14 +1,81 @@
 "use client";
 
+import React, { useEffect, useState } from 'react';
 import AdminShell from "@/components/AdminShell";
+import { api } from "@/lib/api";
+
+interface DashboardStats {
+  totalRevenue: number;
+  newOrders: number;
+  newCustomers: number;
+  brandStats: Array<{ name: string; percentage: number; color: string }>;
+}
 
 export default function Dashboard() {
-  const stats = [
-    { label: 'Tổng doanh thu', value: '1.250.000.000₫', change: '+12.5%', icon: '💵', color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Đơn hàng mới', value: '156', change: '+8.2%', icon: '🛒', color: 'text-orange-600', bg: 'bg-orange-50' },
-    { label: 'Khách hàng mới', value: '42', change: '+5.1%', icon: '👥', color: 'text-purple-600', bg: 'bg-purple-50' },
-    { label: 'Tỷ lệ chuyển đổi', value: '3.5%', change: '-0.4%', icon: '📈', color: 'text-red-600', bg: 'bg-red-50' },
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await api.get<DashboardStats>('/admin/stats');
+        setStats(data);
+      } catch (err: any) {
+        console.error('Failed to fetch stats:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const statCards = [
+    {
+      label: 'Tổng doanh thu',
+      value: stats ? `${stats.totalRevenue.toLocaleString()}₫` : '0₫',
+      change: '+12.5%',
+      icon: '💵',
+      color: 'text-blue-600',
+      bg: 'bg-blue-50'
+    },
+    {
+      label: 'Đơn hàng mới',
+      value: stats ? stats.newOrders.toString() : '0',
+      change: '+8.2%',
+      icon: '🛒',
+      color: 'text-orange-600',
+      bg: 'bg-orange-50'
+    },
+    {
+      label: 'Khách hàng mới',
+      value: stats ? stats.newCustomers.toString() : '0',
+      change: '+5.1%',
+      icon: '👥',
+      color: 'text-purple-600',
+      bg: 'bg-purple-50'
+    },
+    {
+      label: 'Tỷ lệ chuyển đổi',
+      value: '3.5%',
+      change: '-0.4%',
+      icon: '📈',
+      color: 'text-red-600',
+      bg: 'bg-red-50'
+    },
   ];
+
+  if (loading) {
+    return (
+      <AdminShell>
+        <div className="flex items-center justify-center h-full">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      </AdminShell>
+    );
+  }
 
   return (
     <AdminShell>
@@ -24,9 +91,15 @@ export default function Dashboard() {
           </button>
         </div>
 
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl text-sm font-medium">
+            ⚠️ Lỗi: {error}. Đang hiển thị dữ liệu từ hệ thống.
+          </div>
+        )}
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
+          {statCards.map((stat, index) => (
             <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center text-2xl`}>
@@ -61,13 +134,13 @@ export default function Dashboard() {
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-800 mb-6">Thương hiệu bán chạy</h3>
             <div className="space-y-6">
-              {[
+              {(stats?.brandStats || [
                 { name: 'Apple MacBook', percentage: 35, color: 'bg-blue-600' },
                 { name: 'Dell XPS/Vostro', percentage: 28, color: 'bg-blue-500' },
                 { name: 'ASUS ROG/Zenbook', percentage: 20, color: 'bg-blue-400' },
                 { name: 'HP Envy/Pavilion', percentage: 12, color: 'bg-blue-300' },
                 { name: 'Lenovo ThinkPad', percentage: 5, color: 'bg-blue-200' },
-              ].map((brand, index) => (
+              ]).map((brand, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-medium text-gray-700">{brand.name}</span>
@@ -90,7 +163,7 @@ export default function Dashboard() {
 
         {/* Bottom Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Recent Orders */}
+          {/* Recent Orders - Placeholder for now, can be fetched separately if needed */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-gray-800">Đơn hàng mới nhất</h3>
@@ -104,12 +177,12 @@ export default function Dashboard() {
                       🛍️
                     </div>
                     <div>
-                      <p className="font-bold text-sm text-gray-800">#ORD-5542 - Trần Minh Tâm</p>
-                      <p className="text-xs text-gray-500">2 phút trước • 1 sản phẩm</p>
+                      <p className="font-bold text-sm text-gray-800">#ORD-5542 - Khách hàng mới</p>
+                      <p className="text-xs text-gray-500">Giao dịch gần đây</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-sm text-gray-800">19.500.000₫</p>
+                    <p className="font-bold text-sm text-gray-800">---₫</p>
                     <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full uppercase">Chờ xử lý</span>
                   </div>
                 </div>

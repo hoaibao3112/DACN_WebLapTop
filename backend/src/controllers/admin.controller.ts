@@ -50,6 +50,39 @@ export class AdminController {
             next(error);
         }
     }
+
+    /**
+     * Update order status
+     */
+    async updateOrder(req: Request, res: Response, next: NextFunction) {
+        try {
+            const orderId = parseInt(req.params.id);
+            const { status } = req.body;
+            const order = await adminService.updateOrderStatus(orderId, status);
+            res.json({
+                success: true,
+                data: order,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    /**
+     * Toggle user status
+     */
+    async toggleUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = parseInt(req.params.id);
+            const user = await adminService.toggleUserStatus(userId);
+            res.json({
+                success: true,
+                data: user,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default new AdminController();

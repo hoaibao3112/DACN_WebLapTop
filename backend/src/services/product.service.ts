@@ -287,6 +287,10 @@ export class ProductService {
         return product;
     }
 
+    async getAllCategories() {
+        return await DanhMuc.findAll();
+    }
+
     /**
      * Delete product
      */
