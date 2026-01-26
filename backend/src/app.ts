@@ -9,9 +9,10 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 const app: Application = express();
 
 // Middleware - CORS Configuration
-// Temporarily allowing only localhost:3000 to fix CORS multiple values error
+const origins = env.CORS_ORIGIN ? env.CORS_ORIGIN.split(',') : ['http://localhost:3000'];
+
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: origins,
     credentials: true,
 }));
 
