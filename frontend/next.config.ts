@@ -9,8 +9,11 @@ const nextConfig: NextConfig = {
         port: '5000',
         pathname: '/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
-    // Allow localhost images in development
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     unoptimized: process.env.NODE_ENV === 'development',
