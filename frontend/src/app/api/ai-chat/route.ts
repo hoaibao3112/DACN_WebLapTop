@@ -1,24 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyBu7kbzoYU94A-FdySEve4Nx87UP7UrVkE';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+// URL của AI backend server riêng (port 5001)
+const AI_BACKEND_URL =
+    process.env.NEXT_PUBLIC_AI_API_URL ||
+    process.env.AI_API_URL ||
+    'http://localhost:5001/api/ai/chat';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
 
-const SYSTEM_PROMPT = `Bạn là trợ lý AI Shopping Assistant chuyên tư vấn laptop tại cửa hàng Laptop Shop.
+export const POST = async (request: NextRequest): Promise<NextResponse> => {
+  try {
+    const body = await request.json() as { message: string; conversationHistory?: Message[] };
+    const { message, conversationHistory } = body;
 
-THÔNG TIN SẢN PHẨM CÓ SẴN:
-1. Dell XPS 13 - 25.990.000đ - 32.990.000đ
-   - CPU: Intel Core i5-1235U / i7-1255U
-   - RAM: 8GB / 16GB LPDDR5
-   - Storage: 256GB / 512GB SSD NVMe
-   - Card đồ họa: Intel Iris Xe
-   - Màn hình: 13.4" FHD+ IPS
-   - Trọng lượng: 1.24kg
-   - Phù hợp: Văn phòng, sinh viên, di động
+    if (!message) {
+      return NextResponse.json(
+        { error: 'Message is required' },
+        { status: 400 }
+      );
+    }
+
+    // Proxy request đến AI backend server riêng (port 5001)
+    const response = await fetch(AI_BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, conversationHistory }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('AI Backend Error:', errorData);
+      return NextResponse.json(
+        { error: 'Failed to get response from AI service' },
+        { status: response.status }
+      );
+    }
+
+    const data = await response.json() as { success: boolean; response: string };
+    return NextResponse.json({ response: data.response });
+  } catch (error) {
+    console.error('AI Chat Proxy Error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error', message: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
+};
+
 
 2. HP Pavilion Gaming 15 - 18.990.000đ - 24.990.000đ
    - CPU: Intel Core i5-11300H / i7-11800H
