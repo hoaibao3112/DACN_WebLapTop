@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authApi } from '@/lib/api';
 import { User, LoginCredentials, RegisterData, AuthContextType } from '@/lib/types';
-import { saveUser, getUser, clearAuthData } from '@/lib/auth';
+import { saveUser, getUser, clearAuthData, getAccessToken } from '@/lib/auth';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -24,9 +24,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const savedUser = getUser();
-        if (savedUser) {
-          // Verify token is still valid by fetching profile
+        const token = getAccessToken();
+        if (token) {
+          // Token exists — fetch profile to verify & load user
           const response = await authApi.getProfile();
           if (response.success && response.data) {
             setUser(response.data);

@@ -5,6 +5,8 @@ dotenv.config();
 interface EnvConfig {
     NODE_ENV: string;
     PORT: number;
+    AI_PORT: number;
+    GEMINI_API_KEY: string;
     DB_HOST: string;
     DB_PORT: number;
     DB_NAME: string;
@@ -56,6 +58,8 @@ const getEnvVariable = (key: string, defaultValue?: string): string => {
 export const env: EnvConfig = {
     NODE_ENV: getEnvVariable('NODE_ENV', 'development'),
     PORT: parseInt(getEnvVariable('PORT', '5000'), 10),
+    AI_PORT: parseInt(getEnvVariable('AI_PORT', '5001'), 10),
+    GEMINI_API_KEY: getEnvVariable('GEMINI_API_KEY', ''),  // Set in .env
     DB_HOST: getEnvVariable('DB_HOST'),
     DB_PORT: parseInt(getEnvVariable('DB_PORT', '3306'), 10),
     DB_NAME: getEnvVariable('DB_NAME'),

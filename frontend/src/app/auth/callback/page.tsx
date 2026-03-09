@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { saveTokens, saveUser } from '@/lib/auth';
+import { useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { saveTokens } from '@/lib/auth';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
-export default function AuthCallback() {
-  const router = useRouter();
+function AuthCallbackInner() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -17,41 +16,21 @@ export default function AuthCallback() {
 
       if (error) {
         alert('Đăng nhập thất bại. Vui lòng thử lại.');
-        router.push('/login');
+        window.location.href = '/login';
         return;
       }
 
       if (token && refreshToken) {
-        // Save tokens
+        // Save tokens — hard reload so AuthContext remounts and fetches profile
         saveTokens(token, refreshToken);
-
-        // Fetch user profile
-        try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/profile`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            saveUser(data.data);
-            router.push('/');
-          } else {
-            throw new Error('Failed to fetch profile');
-          }
-        } catch (error) {
-          console.error('Error fetching profile:', error);
-          alert('Đã xảy ra lỗi. Vui lòng đăng nhập lại.');
-          router.push('/login');
-        }
+        window.location.href = '/';
       } else {
-        router.push('/login');
+        window.location.href = '/login';
       }
     };
 
     handleCallback();
-  }, [searchParams, router]);
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -60,5 +39,22 @@ export default function AuthCallback() {
         <p className="mt-4 text-gray-600">Đang xử lý đăng nhập...</p>
       </div>
     </div>
+  );
+}
+
+export default function AuthCallback() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <LoadingSpinner size="lg" />
+            <p className="mt-4 text-gray-600">Đang tải...</p>
+          </div>
+        </div>
+      }
+    >
+      <AuthCallbackInner />
+    </Suspense>
   );
 }

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Sơ đồ AI – Laptop Store</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family:'Segoe UI',sans-serif;
+  background:#f1f5f9;
+  min-height:100vh;
+  padding:32px 20px;
+}
+h1 { text-align:center; font-size:20px; font-weight:700; color:#0f172a; margin-bottom:5px; }
+.sub { text-align:center; color:#64748b; font-size:12.5px; margin-bottom:22px; }
+.export-btn {
+  display:block; margin:0 auto 24px;
+  background:#334155; color:#fff; border:none;
+  padding:9px 28px; border-radius:7px; font-size:13px;
+  font-weight:600; cursor:pointer; letter-spacing:.2px;
+}
+.export-btn:hover { background:#1e293b; }
+
+#diagram {
+  max-width:820px; margin:0 auto;
+  background:#fff; border-radius:16px;
+  padding:28px 28px 32px;
+  box-shadow:0 4px 24px rgba(0,0,0,.08);
+}
+
+/* Header */
+.dh { display:flex; align-items:center; gap:12px; margin-bottom:22px; padding-bottom:16px; border-bottom:1.5px solid #f1f5f9; }
+.dh-icon { width:44px; height:44px; border-radius:10px; background:#0f172a; display:flex; align-items:center; justify-content:center; font-size:22px; }
+.dh-title { font-size:15px; font-weight:700; color:#0f172a; }
+.dh-sub { font-size:12px; color:#64748b; margin-top:2px; }
+
+/* Layout */
+.layout { display:grid; grid-template-columns:1fr; gap:26px; align-items:start; }
+
+/* Steps */
+.flow { display:flex; flex-direction:column; }
+.step {
+  display:flex; align-items:flex-start; gap:13px;
+  padding:13px 14px; border-radius:10px;
+  border:1.5px solid #e2e8f0; background:#fff;
+}
+.sl { display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0; }
+.sn { width:27px; height:27px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff; }
+.si { font-size:15px; }
+.sb { flex:1; }
+.st { font-size:13px; font-weight:700; color:#0f172a; margin-bottom:3px; }
+.sd { font-size:11.5px; color:#64748b; line-height:1.55; }
+
+.arr { display:flex; flex-direction:column; align-items:center; margin:1px 0; }
+.al { width:1.5px; height:18px; background:#cbd5e1; }
+.ah { width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:7px solid #94a3b8; }
+
+/* tints */
+.t1{border-color:#bfdbfe;background:#f8faff} .t2{border-color:#a5f3fc;background:#f0fdfe}
+.t3{border-color:#ddd6fe;background:#faf8ff} .t4{border-color:#fde68a;background:#fffdf0}
+.t5{border-color:#fecdd3;background:#fff5f6} .t6{border-color:#bbf7d0;background:#f0fdf4}
+.t7{border-color:#fed7aa;background:#fff8f3} .t8{border-color:#e2e8f0;background:#f8fafc}
+.n1{background:#2563eb} .n2{background:#0891b2} .n3{background:#7c3aed}
+.n4{background:#d97706} .n5{background:#e11d48} .n6{background:#059669}
+.n7{background:#ea580c} .n8{background:#475569}
+
+/* Side */
+.side { display:flex; flex-direction:column; gap:12px; }
+.card { border-radius:10px; border:1.5px solid #e2e8f0; padding:12px 13px; background:#f8fafc; }
+.ct { font-size:10.5px; font-weight:800; color:#334155; margin-bottom:8px; text-transform:uppercase; letter-spacing:.6px; }
+.cr { display:flex; align-items:center; gap:7px; font-size:11.5px; color:#475569; margin-bottom:5px; line-height:1.4; }
+.cr:last-child { margin-bottom:0; }
+.dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.pills { display:flex; flex-wrap:wrap; gap:5px; margin-top:1px; }
+.pill { font-size:10.5px; font-weight:600; padding:3px 9px; border-radius:20px; border:1.5px solid #e2e8f0; color:#475569; background:#fff; }
+</style>
+</head>
+<body>
+
+<h1>Sơ Đồ Hoạt Động — AI Trợ Lý Tư Vấn Laptop</h1>
+<p class="sub">RAG Pipeline · Ollama Local LLM · MySQL Database</p>
+<button class="export-btn" onclick="exportPNG()">⬇ Tải xuống PNG</button>
+
+<div id="diagram">
+
+  <div class="dh">
+    <div class="dh-icon">🤖</div>
+    <div>
+      <div class="dh-title">AI Shopping Assistant – Laptop Store</div>
+      <div class="dh-sub">Luồng xử lý từ câu hỏi người dùng đến câu trả lời tư vấn</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- FLOW -->
+    <div class="flow">
+
+      <div class="step t1">
+        <div class="sl"><div class="sn n1">1</div><div class="si">💬</div></div>
+        <div class="sb">
+          <div class="st">User gửi câu hỏi</div>
+          <div class="sd">Khách hàng nhập yêu cầu tư vấn laptop qua giao diện chat (Next.js 14)</div>
+        </div>
+      </div>
+      <div class="arr"><div class="al"></div><div class="ah"></div></div>
+
+      <div class="step t2">
+        <div class="sl"><div class="sn n2">2</div><div class="si">🖥️</div></div>
+        <div class="sb">
+          <div class="st">Backend nhận request</div>
+          <div class="sd">Next.js API Route xác thực, parse body và chuyển đến service xử lý AI</div>
+        </div>
+      </div>
+      <div class="arr"><div class="al"></div><div class="ah"></div></div>
+
+      <div class="step t3">
+        <div class="sl"><div class="sn n3">3</div><div class="si">🔢</div></div>
+        <div class="sb">
+          <div class="st">Tạo Embedding</div>
+          <div class="sd">Câu hỏi được mã hóa thành vector số học qua Ollama Embedding Model (nomic-embed-text)</div>
+        </div>
+      </div>
+      <div class="arr"><div class="al"></div><div class="ah"></div></div>
+
+      <div class="step t4">
+        <div class="sl"><div class="sn n4">4</div><div class="si">🗄️</div></div>
+        <div class="sb">
+          <div class="st">Truy vấn Vector Database</div>
+          <div class="sd">So sánh cosine similarity, tìm đoạn dữ liệu sản phẩm gần nghĩa nhất trong kho vector</div>
+        </div>
+      </div>
+      <div class="arr"><div class="al"></div><div class="ah"></div></div>
+
+      <div class="step t5">
+        <div class="sl"><div class="sn n5">5</div><div class="si">📦</div></div>
+        <div class="sb">
+          <div class="st">Lấy thông tin sản phẩm phù hợp</div>
+          <div class="sd">Truy xuất thông số kỹ thuật, giá bán, tồn kho từ MySQL theo kết quả vector search</div>
+        </div>
+      </div>
+      <div class="arr"><div class="al"></div><div class="ah"></div></div>
+
+      <div class="step t6">
+        <div class="sl"><div class="sn n6">6</div><div class="si">📝</div></div>
+        <div class="sb">
+          <div class="st">Kết hợp dữ liệu vào Prompt</div>
+          <div class="sd">Ghép context sản phẩm + lịch sử hội thoại + câu hỏi thành prompt hoàn chỉnh gửi LLM</div>
+        </div>
+      </div>
+      <div class="arr"><div class="al"></div><div class="ah"></div></div>
+
+      <div class="step t7">
+        <div class="sl"><div class="sn n7">7</div><div class="si">🧠</div></div>
+        <div class="sb">
+          <div class="st">Ollama LLM tạo câu trả lời</div>
+          <div class="sd">Ollama chạy mô hình ngôn ngữ cục bộ (llama3 / mistral), sinh phản hồi tự nhiên, chính xác</div>
+        </div>
+      </div>
+      <div class="arr"><div class="al"></div><div class="ah"></div></div>
+
+      <div class="step t8">
+        <div class="sl"><div class="sn n8">8</div><div class="si">💡</div></div>
+        <div class="sb">
+          <div class="st">Trả về giao diện chat</div>
+          <div class="sd">Kết quả stream về frontend, hiển thị từng chữ và lưu lịch sử vào DB + localStorage</div>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</div>
+
+<script>
+function exportPNG(){
+  const btn = document.querySelector('.export-btn');
+  btn.disabled = true; btn.textContent = '⏳ Đang xử lý...';
+  html2canvas(document.getElementById('diagram'), {
+    scale: 2.5, backgroundColor:'#ffffff', useCORS:true, logging:false,
+  }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = 'AI_Flow_Diagram.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.disabled = false; btn.textContent = '⬇ Tải xuống PNG';
+  });
+}
+</script>
+</body>
+</html>
