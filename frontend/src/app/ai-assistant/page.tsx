@@ -101,28 +101,52 @@ export default function AIAssistantPage() {
         .slice(-6)
         .map(({ role, content }) => ({ role, content }));
 
-      const response = await fetch('/api/ai-chat', {
+      // Gọi tới Next.js API route (cùng origin) để tránh lỗi CORS
+      // Route này sẽ proxy request tới backend AI (được cấu hình trong .env.local)
+      // const response = await fetch(process.env.NEXT_PUBLIC_AI_API_URL + '/api/v1/chat', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     message: input.trim(),
+      //     conversationHistory: historyToSend,
+      //   }),
+      // });
+
+      const response = await fetch(process.env.NEXT_PUBLIC_AI_API_URL + '/api/v1/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: input.trim(),
-          conversationHistory: historyToSend,
+          input: input.trim(),          // <-- đúng tên trường backend mong đợi
+          // (tuỳ chọn) k: 3,
+          // (tuỳ chọn) mmr_diversity: 0.5,
         }),
       });
 
       if (!response.ok) throw new Error('Failed to get response');
 
-      const data = await response.json() as {
-        response: string;
-        meta?: { queryComplexity: string; topK: number; chunksRetrieved: number; hasContext: boolean };
+      const data = await response.json();
+
+      const resolveAssistantText = (payload: any): string => {
+        if (!payload) return 'Đã nhận được phản hồi trống từ server.';
+        if (typeof payload === 'string') return payload;
+        if (typeof payload.response === 'string' && payload.response.trim()) return payload.response;
+        if (typeof payload.message === 'string' && payload.message.trim()) return payload.message;
+        if (typeof payload.text === 'string' && payload.text.trim()) return payload.text;
+        if (typeof payload.result === 'string' && payload.result.trim()) return payload.result;
+        if (payload.data && typeof payload.data === 'string' && payload.data.trim()) return payload.data;
+        if (payload.data && typeof payload.data.answer === 'string' && payload.data.answer.trim()) return payload.data.answer;
+        if (payload.data && typeof payload.data.response === 'string' && payload.data.response.trim()) return payload.data.response;
+        return JSON.stringify(payload);
       };
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response,
+        content: resolveAssistantText(data),
         timestamp: new Date(),
       };
+
+      console.log('AI Response Raw:', data);
 
       const finalMessages = [...updatedMessages, assistantMessage];
       setMessages(finalMessages);

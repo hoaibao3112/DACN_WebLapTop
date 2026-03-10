@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const AI_BASE_URL =
   process.env.NEXT_PUBLIC_AI_API_URL ||
   process.env.AI_API_URL ||
-  'http://localhost:5001/api/ai';
+  'http://localhost:5000/api/ai';
 
 interface Message {
   role: 'user' | 'assistant';
