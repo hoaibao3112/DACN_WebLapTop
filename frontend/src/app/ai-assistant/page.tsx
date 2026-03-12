@@ -96,29 +96,11 @@ export default function AIAssistantPage() {
     setLoading(true);
 
     try {
-      // Chỉ gửi role + content (không gửi id/timestamp lên backend)
-      const historyToSend = updatedMessages
-        .slice(-6)
-        .map(({ role, content }) => ({ role, content }));
-
-      // Gọi tới Next.js API route (cùng origin) để tránh lỗi CORS
-      // Route này sẽ proxy request tới backend AI (được cấu hình trong .env.local)
-      // const response = await fetch(process.env.NEXT_PUBLIC_AI_API_URL + '/api/v1/chat', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     message: input.trim(),
-      //     conversationHistory: historyToSend,
-      //   }),
-      // });
-
-      const response = await fetch(process.env.NEXT_PUBLIC_AI_API_URL + '/api/v1/chat', {
+      const response = await fetch((process.env.NEXT_PUBLIC_AI_API_URL || 'http://localhost:5202') + '/api/v1/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          input: input.trim(),          // <-- đúng tên trường backend mong đợi
-          // (tuỳ chọn) k: 3,
-          // (tuỳ chọn) mmr_diversity: 0.5,
+          input: userMessage.content,
         }),
       });
 
@@ -127,16 +109,21 @@ export default function AIAssistantPage() {
       const data = await response.json();
 
       const resolveAssistantText = (payload: any): string => {
-        if (!payload) return 'Đã nhận được phản hồi trống từ server.';
-        if (typeof payload === 'string') return payload;
-        if (typeof payload.response === 'string' && payload.response.trim()) return payload.response;
-        if (typeof payload.message === 'string' && payload.message.trim()) return payload.message;
-        if (typeof payload.text === 'string' && payload.text.trim()) return payload.text;
-        if (typeof payload.result === 'string' && payload.result.trim()) return payload.result;
-        if (payload.data && typeof payload.data === 'string' && payload.data.trim()) return payload.data;
-        if (payload.data && typeof payload.data.answer === 'string' && payload.data.answer.trim()) return payload.data.answer;
-        if (payload.data && typeof payload.data.response === 'string' && payload.data.response.trim()) return payload.data.response;
-        return JSON.stringify(payload);
+        let text = 'Đã nhận được phản hồi trống từ server.';
+        if (!payload) return text;
+        
+        if (typeof payload === 'string') text = payload;
+        else if (typeof payload.response === 'string' && payload.response.trim()) text = payload.response;
+        else if (typeof payload.message === 'string' && payload.message.trim()) text = payload.message;
+        else if (typeof payload.text === 'string' && payload.text.trim()) text = payload.text;
+        else if (typeof payload.result === 'string' && payload.result.trim()) text = payload.result;
+        else if (payload.data && typeof payload.data === 'string' && payload.data.trim()) text = payload.data;
+        else if (payload.data && typeof payload.data.answer === 'string' && payload.data.answer.trim()) text = payload.data.answer;
+        else if (payload.data && typeof payload.data.response === 'string' && payload.data.response.trim()) text = payload.data.response;
+        else text = JSON.stringify(payload);
+
+        // Loại bỏ markdown code blocks nếu có
+        return text.replace(/^```html\s*/i, '').replace(/\s*```$/i, '').trim();
       };
 
       const assistantMessage: Message = {
@@ -197,13 +184,13 @@ export default function AIAssistantPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-blue-50">
       <div className="container mx-auto px-4 py-6 h-screen flex flex-col">
         {/* Header */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                 <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
@@ -224,7 +211,7 @@ export default function AIAssistantPage() {
 
         <div className="flex-1 flex gap-4 overflow-hidden">
           {/* Sidebar - Conversation History */}
-          <div className="hidden lg:block w-64 flex-shrink-0">
+          <div className="hidden lg:block w-64 shrink-0">
             <Card className="h-full flex flex-col p-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-semibold text-gray-700">LỊCH SỬ TƯ VẤN</h2>
@@ -287,9 +274,9 @@ export default function AIAssistantPage() {
                     className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
                   >
                     {/* Avatar */}
-                    <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${message.role === 'assistant'
-                        ? 'bg-gradient-to-br from-blue-500 to-indigo-600'
-                        : 'bg-gradient-to-br from-gray-600 to-gray-800'
+                    <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center ${message.role === 'assistant'
+                        ? 'bg-linear-to-br from-blue-500 to-indigo-600'
+                        : 'bg-linear-to-br from-gray-600 to-gray-800'
                       }`}>
                       {message.role === 'assistant' ? (
                         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,13 +289,23 @@ export default function AIAssistantPage() {
                       )}
                     </div>
 
-                    {/* Message Bubble */}
+                    {/* Message Bubble - Render HTML an toàn */}
                     <div className={`flex-1 max-w-3xl ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
-                      <div className={`inline-block p-4 rounded-2xl ${message.role === 'assistant'
-                          ? 'bg-white border border-gray-200 shadow-sm'
-                          : 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white'
+                      <div className={`inline-block p-4 rounded-2xl ${
+                          message.role === 'assistant'
+                            ? 'bg-white border border-gray-200 shadow-sm'
+                            : 'bg-linear-to-br from-blue-600 to-indigo-700 text-white'
                         }`}>
-                        <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                        
+                        {message.role === 'user' ? (
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                        ) : (
+                          <div 
+                            className="text-sm leading-relaxed ai-html-content space-y-2 text-gray-800"
+                            dangerouslySetInnerHTML={{ __html: message.content }}
+                          />
+                        )}
+
                       </div>
                       <p className={`text-xs text-gray-500 mt-1 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
                         {message.timestamp.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
@@ -319,7 +316,7 @@ export default function AIAssistantPage() {
 
                 {loading && (
                   <div className="flex gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                       <LoadingSpinner size="sm" />
                     </div>
                     <div className="flex-1">
@@ -347,7 +344,7 @@ export default function AIAssistantPage() {
                       onKeyPress={handleKeyPress}
                       placeholder="Nhập yêu cầu của bạn tại đây..."
                       rows={1}
-                      className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                      className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none custom-scrollbar"
                       style={{ maxHeight: '120px' }}
                     />
                     <button

@@ -1,47 +1,95 @@
 @import "tailwindcss";
 
-:root {
-  /* Color Palette */
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-secondary-500: #8b5cf6;
-  --color-secondary-600: #7c3aed;
+@layer base {
+  :root {
+    /* Color Palette */
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-secondary-500: #8b5cf6;
+    --color-secondary-600: #7c3aed;
+    
+    /* Font Family */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Style dành riêng cho nội dung HTML do AI sinh ra */
+  .ai-html-content p {
+    margin-bottom: 0.5rem;
+  }
+  .ai-html-content ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .ai-html-content ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .ai-html-content li {
+    margin-bottom: 0.25rem;
+  }
+  .ai-html-content strong, 
+  .ai-html-content b {
+    font-weight: 600;
+    color: #1f2937;
+  }
+  .ai-html-content em, 
+  .ai-html-content i {
+    font-style: italic;
+  }
+  .ai-html-content a {
+    color: #2563eb;
+    text-decoration: underline;
+  }
+}
+
+@layer utilities {
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
   
-  /* Font Family */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 9999px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 9999px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
 }
 
-body {
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* Custom Scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f3f4f6;
-  border-radius: 9999px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 9999px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
-/* Animations */
+/* Định nghĩa Keyframes */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -61,13 +109,3 @@ html {
     transform: translateX(0);
   }
 }
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.animate-slide-in {
-  animation: slideIn 0.3s ease-out;
-}
-
-
