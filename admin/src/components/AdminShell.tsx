@@ -135,7 +135,7 @@ export default function AdminShell({
                                 <p className="text-[11px] text-gray-500 uppercase tracking-wider">Quản trị viên</p>
                             </div>
                             <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white shadow-sm overflow-hidden">
-                                <img src="/api/placeholder/40/40" alt="Avatar" className="w-full h-full object-cover" />
+                                <img src="/images/avatar-placeholder.png" alt="Avatar" className="w-full h-full object-cover" />
                             </div>
                         </div>
                     </div>
