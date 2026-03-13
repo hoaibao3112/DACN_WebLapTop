@@ -9,7 +9,7 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 const app: Application = express();
 
 // Middleware - CORS Configuration
-const origins = env.CORS_ORIGIN ? env.CORS_ORIGIN.split(',') : ['http://localhost:3000'];
+const origins = env.CORS_ORIGIN ? env.CORS_ORIGIN.split(',') : ['http://localhost:3000', 'http://localhost:5500'];
 
 app.use(cors({
     origin: origins,
