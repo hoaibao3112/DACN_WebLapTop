@@ -50,7 +50,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = useCallback(async (credentials: LoginCredentials) => {
     try {
       setLoading(true);
-      const response = await authApi.login(credentials);
+      const transformedCredentials = {
+        email: credentials.email,
+        matkhau: credentials.mat_khau,
+      };
+      const response = await authApi.login(transformedCredentials);
       
       if (response.success && response.data) {
         setUser(response.data.user);
@@ -71,7 +75,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = useCallback(async (data: RegisterData) => {
     try {
       setLoading(true);
-      const response = await authApi.register(data);
+      const transformedData = {
+        hoten: data.ho_ten,
+        email: data.email,
+        matkhau: data.mat_khau,
+      };
+      const response = await authApi.register(transformedData);
       
       if (response.success && response.data) {
         setUser(response.data.user);

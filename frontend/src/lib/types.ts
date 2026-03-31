@@ -176,23 +176,32 @@ export interface PaginatedResponse<T> {
     limit: number;
     total: number;
     totalPages: number;
-  };
+  }
 }
-
 // Auth types
 export interface LoginCredentials {
-  ten_dang_nhap: string;
+  email: string;
   mat_khau: string;
 }
 
 export interface RegisterData {
-  ten_dang_nhap: string;
   mat_khau: string;
   email: string;
   ho_ten: string;
   so_dien_thoai?: string;
   ngay_sinh?: string;
   gioi_tinh?: 'Nam' | 'Nữ' | 'Khác';
+}
+
+export interface BackendRegisterData {
+  hoten: string;
+  email: string;
+  matkhau: string;
+}
+
+export interface BackendLoginData {
+  email: string;
+  matkhau: string;
 }
 
 export interface AuthResponse {

@@ -17,13 +17,12 @@ export default function LoginPage() {
 
   // Login form
   const [loginData, setLoginData] = useState({
-    ten_dang_nhap: '',
+    email: '',
     mat_khau: '',
   });
 
   // Register form
   const [registerData, setRegisterData] = useState({
-    ten_dang_nhap: '',
     mat_khau: '',
     email: '',
     ho_ten: '',
@@ -107,14 +106,14 @@ export default function LoginPage() {
           {isLoginMode ? (
             <form onSubmit={handleLogin} className="space-y-4">
               <Input
-                label="Tên đăng nhập"
-                type="text"
+                label="Email"
+                type="email"
                 required
-                value={loginData.ten_dang_nhap}
-                onChange={(e) => setLoginData({ ...loginData, ten_dang_nhap: e.target.value })}
+                value={loginData.email}
+                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                 leftIcon={
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                   </svg>
                 }
               />
@@ -185,14 +184,6 @@ export default function LoginPage() {
           ) : (
             /* Register Form */
             <form onSubmit={handleRegister} className="space-y-4">
-              <Input
-                label="Tên đăng nhập"
-                type="text"
-                required
-                value={registerData.ten_dang_nhap}
-                onChange={(e) => setRegisterData({ ...registerData, ten_dang_nhap: e.target.value })}
-              />
-
               <Input
                 label="Email"
                 type="email"

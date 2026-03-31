@@ -5,6 +5,8 @@ import {
   ProductFilters,
   LoginCredentials,
   RegisterData,
+  BackendRegisterData,
+  BackendLoginData,
   AuthResponse,
   User,
   Cart,
@@ -166,7 +168,7 @@ async function apiCall<T>(
 
 // Auth API
 export const authApi = {
-  login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
+  login: async (credentials: BackendLoginData): Promise<AuthResponse> => {
     const response = await apiCall<AuthResponse>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
@@ -180,7 +182,7 @@ export const authApi = {
     return response;
   },
 
-  register: async (data: RegisterData): Promise<AuthResponse> => {
+  register: async (data: BackendRegisterData): Promise<AuthResponse> => {
     const response = await apiCall<AuthResponse>('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(data),
